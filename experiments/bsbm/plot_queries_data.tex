@@ -43,7 +43,7 @@
   log base 10 number format code/.code={%
     $\pgfmathparse{10^(#1)}\pgfmathprintnumber{\pgfmathresult}$%
   },
-  cycle list/Spectral-3,
+  cycle list/Spectral-5,
 }
 
 \begin{document}
@@ -52,12 +52,12 @@
 \newenvironment{resultAxis}{
 \begin{axis}[
     xtick=data,
-    width=144pt,
+    width=240pt,
     height=96pt,
     ymin=0,
     %Y_MAX%
     bar width=2.75pt,
-    enlarge x limits={abs=4pt},
+    enlarge x limits={abs=8pt},
     symbolic x coords={1,2,3,4,5,6,7,8,9,10,11,12},
     % Don't show axis exponent
     ytick scale label code/.code={},
@@ -69,7 +69,7 @@
     axis on top,
     area legend,
     ylabel={Duration (s)},
-    cycle list name=Spectral-3,
+    cycle list name=Spectral-5,
     every axis plot/.append style={
         draw=none,
         fill,
@@ -87,11 +87,15 @@
 }{\end{axis}}
 \begin{tikzpicture}
 \begin{resultAxis}
-\addplot+[ybar, xshift=-1.375pt,legend image post style={xshift=1.375pt}] table [x=query, y expr=(\thisrow{0-mean} / 1000), y error plus expr=(\thisrow{0-plus} / 1000), y error minus expr=(\thisrow{0-minus} / 1000), col sep=semicolon]{"plot_queries_data.csv"};
-\addplot+[ybar, xshift=1.375pt,legend image post style={xshift=-1.375pt}] table [x=query, y expr=(\thisrow{1-mean} / 1000), y error plus expr=(\thisrow{1-plus} / 1000), y error minus expr=(\thisrow{1-minus} / 1000), col sep=semicolon]{"plot_queries_data.csv"};
-\addplot+[only marks,xshift=-1.375pt,mark=star,mark options={color=gray,scale=0.5}] table [x=query, y expr=(\thisrow{0-first-mean} / 1000), col sep=semicolon]{"plot_queries_data.csv"};
-\addplot+[only marks,xshift=1.375pt,mark=star,mark options={color=gray,scale=0.5}] table [x=query, y expr=(\thisrow{1-first-mean} / 1000), col sep=semicolon]{"plot_queries_data.csv"};
-\legend{Comunica-Memory,Comunica-HDT}
+\addplot+[ybar, xshift=-4.125pt,legend image post style={xshift=4.125pt}] table [x=query, y expr=(\thisrow{0-mean} / 1000), y error plus expr=(\thisrow{0-plus} / 1000), y error minus expr=(\thisrow{0-minus} / 1000), col sep=semicolon]{"plot_queries_data.csv"};
+\addplot+[ybar, xshift=-1.375pt,legend image post style={xshift=1.375pt}] table [x=query, y expr=(\thisrow{1-mean} / 1000), y error plus expr=(\thisrow{1-plus} / 1000), y error minus expr=(\thisrow{1-minus} / 1000), col sep=semicolon]{"plot_queries_data.csv"};
+\addplot+[ybar, xshift=1.375pt,legend image post style={xshift=-1.375pt}] table [x=query, y expr=(\thisrow{2-mean} / 1000), y error plus expr=(\thisrow{2-plus} / 1000), y error minus expr=(\thisrow{2-minus} / 1000), col sep=semicolon]{"plot_queries_data.csv"};
+\addplot+[ybar, xshift=4.125pt,legend image post style={xshift=-4.125pt}] table [x=query, y expr=(\thisrow{3-mean} / 1000), y error plus expr=(\thisrow{3-plus} / 1000), y error minus expr=(\thisrow{3-minus} / 1000), col sep=semicolon]{"plot_queries_data.csv"};
+\addplot+[only marks,xshift=-4.125pt,mark=star,mark options={color=gray,scale=0.5}] table [x=query, y expr=(\thisrow{0-first-mean} / 1000), col sep=semicolon]{"plot_queries_data.csv"};
+\addplot+[only marks,xshift=-1.375pt,mark=star,mark options={color=gray,scale=0.5}] table [x=query, y expr=(\thisrow{1-first-mean} / 1000), col sep=semicolon]{"plot_queries_data.csv"};
+\addplot+[only marks,xshift=1.375pt,mark=star,mark options={color=gray,scale=0.5}] table [x=query, y expr=(\thisrow{2-first-mean} / 1000), col sep=semicolon]{"plot_queries_data.csv"};
+\addplot+[only marks,xshift=4.125pt,mark=star,mark options={color=gray,scale=0.5}] table [x=query, y expr=(\thisrow{3-first-mean} / 1000), col sep=semicolon]{"plot_queries_data.csv"};
+\legend{Comunica-Memory,Comunica-HDT,Oxigraph-Rust,Oxigraph-JS}
 \end{resultAxis}
 \end{tikzpicture}
 \end{document}

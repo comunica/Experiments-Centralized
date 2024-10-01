@@ -2,7 +2,8 @@
   "@context": [
     "https://linkedsoftwaredependencies.org/bundles/npm/jbr/^5.0.0/components/context.jsonld",
     "https://linkedsoftwaredependencies.org/bundles/npm/@jbr-experiment/bsbm/^5.0.0/components/context.jsonld",
-    "https://linkedsoftwaredependencies.org/bundles/npm/@jbr-hook/sparql-endpoint-comunica/^5.0.0/components/context.jsonld"
+    "https://linkedsoftwaredependencies.org/bundles/npm/@jbr-hook/sparql-endpoint-comunica/^5.0.0/components/context.jsonld",
+    "https://linkedsoftwaredependencies.org/bundles/npm/@jbr-hook/docker/^5.0.0/components/context.jsonld"
   ],
   "@id": "urn:jbr:bsbm:combination_1",
   "@type": "ExperimentBsbm",
@@ -12,5 +13,5 @@
   "endpointUrlExternal": "http://localhost:3001/sparql",
   "warmupRuns": 5,
   "runs": 10,
-  "hookSparqlEndpoint": {"@id": "urn:jbr:bsbm:combination_0:hookSparqlEndpoint",  "@type": "HookSparqlEndpointComunica",  "dockerfileClient": "input/dockerfiles/Dockerfile-comunica-hdt",  "resourceConstraints": {"@type": "StaticDockerResourceConstraints","cpu_percentage": 100  },  "configClient": "input/comunica-hdt-config.json",  "contextClient": "input/comunica-hdt-context.json",  "additionalBinds": ["../../generated/dataset.nt:/tmp/dataset.nt"],  "clientPort": 3001,  "clientLogLevel": "info",  "queryTimeout": 500,  "maxMemory": 8192}
+  "hookSparqlEndpoint": {"@id": "urn:jbr:bsbm:combination_1:hookSparqlEndpoint",  "@type": "HookSparqlEndpointComunica",  "dockerfileClient": "input/dockerfiles/Dockerfile-comunica-hdt",  "resourceConstraints": {"@type": "StaticDockerResourceConstraints","cpu_percentage": 100  },  "configClient": "input/comunica-hdt-config.json",  "contextClient": "input/comunica-hdt-context.json",  "additionalBinds": ["../../generated/dataset.hdt.index.v1-1:/tmp/dataset.hdt.index.v1-1", "../../generated/dataset.hdt:/tmp/dataset.hdt"],  "clientPort": 3001,  "clientLogLevel": "info",  "queryTimeout": 500,  "maxMemory": 8192}
 }

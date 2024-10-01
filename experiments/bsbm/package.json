@@ -10,6 +10,6 @@
   "scripts": {
     "jbr": "cross-env NODE_OPTIONS=--max-old-space-size=8192 jbr",
     "validate": "jbr validate",
-    "plot": "psbr csv bsbm combinations/combination_*/output && psbr tex query combinations/combination_*/output --svg --overrideCombinationLabels Comunica-Memory,Comunica-HDT"
+    "plot": "psbr csv bsbm combinations/combination_*/output && psbr tex query combinations/combination_*/output --svg --overrideCombinationLabels Comunica-Memory,Comunica-HDT,Oxigraph-Rust,Oxigraph-JS"
   }
 }

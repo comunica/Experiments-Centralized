@@ -3,6 +3,6 @@
     "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/config-query-sparql-hdt/^3.0.0/components/context.jsonld"
   ],
   "import": [
-    "ccqsh:config/config-file.json"
+    "ccqsh:config/config-default.json"
   ]
 }
