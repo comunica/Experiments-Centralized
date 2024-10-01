@@ -1,0 +1,15 @@
+{
+  "private": true,
+  "name": "bsbm",
+  "dependencies": {
+    "@jbr-experiment/bsbm": "^5.2.3",
+    "@jbr-hook/sparql-endpoint-comunica": "^5.2.0",
+    "cross-env": "^7.0.3",
+    "jbr": "^5.2.0"
+  },
+  "scripts": {
+    "jbr": "cross-env NODE_OPTIONS=--max-old-space-size=8192 jbr",
+    "validate": "jbr validate",
+    "plot": "psbr csv bsbm combinations/combination_*/output && psbr tex query combinations/combination_*/output --svg --overrideCombinationLabels Comunica-Memory,Comunica-HDT"
+  }
+}
