@@ -10,8 +10,10 @@
   "scripts": {
     "jbr": "cross-env NODE_OPTIONS=--max-old-space-size=8192 jbr",
     "validate": "jbr validate",
-    "plot": "psbr tex query combinations/combination_*/output --svg --overrideCombinationLabels Comunica-Memory,Comunica-HDT,Oxigraph-Rust,Oxigraph-JS,Jena",
-    "plot-tmp": "psbr tex query combinations/combination_1/output combinations/combination_2/output combinations/combination_4/output --svg --overrideCombinationLabels Comunica-HDT,Oxigraph-Rust,Jena"
+    "plot": "psbr tex query combinations/combination_*/output --svg --overrideCombinationLabels Comunica-Memory,Comunica-HDT,Oxigraph-Rust,Oxigraph-JS,Oxigraph-JS-RDFJS,Jena",
+    "plot-tmp": "yarn run plot-tmp-c && yarn run plot-tmp-no-c",
+    "plot-tmp-c": "psbr tex query combinations/combination_1/output combinations/combination_2/output combinations/combination_4/output combinations/combination_5/output -n 'plot_c' -q '^C' --svg --overrideCombinationLabels Comunica-HDT,Oxigraph-Rust,Oxigraph-JS-RDFJS,Jena",
+    "plot-tmp-no-c": "psbr tex query combinations/combination_1/output combinations/combination_2/output combinations/combination_4/output combinations/combination_5/output -n 'plot_no_c' -q '^[^C]' --svg --overrideCombinationLabels Comunica-HDT,Oxigraph-Rust,Oxigraph-JS-RDFJS,Jena"
   },
   "packageManager": "yarn@1.22.21+sha1.1959a18351b811cdeedbd484a8f86c3cc3bbaf72"
 }
