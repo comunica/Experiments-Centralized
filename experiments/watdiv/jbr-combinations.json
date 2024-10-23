@@ -3,16 +3,44 @@
     "https://linkedsoftwaredependencies.org/bundles/npm/jbr/^5.0.0/components/context.jsonld"
   ],
   "@id": "urn:jbr:watdiv-combinations",
-  "@type": "FullFactorialCombinationProvider",
+  "@type": "FractionalCombinationProvider",
   "commonGenerated": true,
-  "factors": {
-    "hookSparqlEndpoint": [
-      "{\"@id\": \"urn:jbr:watdiv:combination_0:hookSparqlEndpoint\",  \"@type\": \"HookSparqlEndpointComunica\",  \"dockerfileClient\": \"input/dockerfiles/Dockerfile-comunica-memory\",  \"resourceConstraints\": {\"@type\": \"StaticDockerResourceConstraints\",\"cpu_percentage\": 100  },  \"configClient\": \"input/comunica-memory-config.json\",  \"contextClient\": \"input/comunica-memory-context.json\",  \"additionalBinds\": [\"../../generated/dataset.nt:/tmp/dataset.nt\"],  \"clientPort\": 3001,  \"clientLogLevel\": \"info\",  \"queryTimeout\": 500,  \"maxMemory\": 8192}",
-      "{\"@id\": \"urn:jbr:watdiv:combination_1:hookSparqlEndpoint\",  \"@type\": \"HookSparqlEndpointComunica\",  \"dockerfileClient\": \"input/dockerfiles/Dockerfile-comunica-hdt\",  \"resourceConstraints\": {\"@type\": \"StaticDockerResourceConstraints\",\"cpu_percentage\": 100  },  \"configClient\": \"input/comunica-hdt-config.json\",  \"contextClient\": \"input/comunica-hdt-context.json\",  \"additionalBinds\": [\"../../generated/dataset.hdt.index.v1-1:/tmp/dataset.hdt.index.v1-1\", \"../../generated/dataset.hdt:/tmp/dataset.hdt\"],  \"clientPort\": 3001,  \"clientLogLevel\": \"info\",  \"queryTimeout\": 500,  \"maxMemory\": 8192}",
-      "{\"@id\": \"urn:jbr:watdiv:combination_2:hookSparqlEndpoint\",  \"@type\": \"HookDocker\",  \"dockerfile\": \"input/dockerfiles/Dockerfile-oxigraph\",  \"resourceConstraints\": {\"@type\": \"StaticDockerResourceConstraints\",\"cpu_percentage\": 100  },  \"additionalBinds\": [\"../../generated/dataset.nt:/tmp/dataset.nt\"],  \"additionalFilesPrepare\": [],  \"innerPort\": 3000,  \"outerPort\": 3001}",
-      "{\"@id\": \"urn:jbr:watdiv:combination_3:hookSparqlEndpoint\",  \"@type\": \"HookDocker\",  \"dockerfile\": \"input/dockerfiles/Dockerfile-oxigraph-js\",  \"resourceConstraints\": {\"@type\": \"StaticDockerResourceConstraints\",\"cpu_percentage\": 100  },  \"additionalBinds\": [\"../../generated/dataset.nt:/tmp/dataset.nt\"],  \"additionalFilesPrepare\": [\"input/oxigraph-js\"],  \"innerPort\": 3000,  \"outerPort\": 3001}",
-      "{\"@id\": \"urn:jbr:watdiv:combination_4:hookSparqlEndpoint\",  \"@type\": \"HookDocker\",  \"dockerfile\": \"input/dockerfiles/Dockerfile-oxigraph-js-rdfjs\",  \"resourceConstraints\": {\"@type\": \"StaticDockerResourceConstraints\",\"cpu_percentage\": 100  },  \"additionalBinds\": [\"../../generated/dataset.nt:/tmp/dataset.nt\"],  \"additionalFilesPrepare\": [\"input/oxigraph-js\"],  \"innerPort\": 3000,  \"outerPort\": 3001}",
-      "{\"@id\": \"urn:jbr:watdiv:combination_5:hookSparqlEndpoint\",  \"@type\": \"HookDocker\",  \"dockerfile\": \"input/dockerfiles/Dockerfile-jena\",  \"resourceConstraints\": {\"@type\": \"StaticDockerResourceConstraints\",\"cpu_percentage\": 100  },  \"additionalBinds\": [\"../../generated/dataset.nt:/staging/dataset.nt\", \"input/jena.sh:/jena-fuseki/jbr-init.sh\"],  \"additionalFilesPrepare\": [],  \"innerPort\": 3000,  \"outerPort\": 3001}"
-    ]
-  }
+  "combinations": [
+    {
+      "name": "comunica-memory",
+      "hookSparqlEndpoint": "{\"@id\": \"urn:jbr:watdiv:combination_0:hookSparqlEndpoint\",  \"@type\": \"HookSparqlEndpointComunica\",  \"dockerfileClient\": \"input/dockerfiles/Dockerfile-comunica-memory\",  \"resourceConstraints\": {\"@type\": \"StaticDockerResourceConstraints\",\"cpu_percentage\": 100  },  \"configClient\": \"input/comunica-memory-config.json\",  \"contextClient\": \"input/comunica-memory-context.json\",  \"additionalBinds\": [\"../../generated/dataset.nt:/tmp/dataset.nt\"],  \"clientPort\": 3001,  \"clientLogLevel\": \"info\",  \"queryTimeout\": 500,  \"maxMemory\": 8192}",
+      "endpointUrl": "http://localhost:3001/sparql",
+      "endpointUrlExternal": "http://localhost:3001/sparql"
+    },
+    {
+      "name": "comunica-hdt",
+      "hookSparqlEndpoint": "{\"@id\": \"urn:jbr:watdiv:combination_1:hookSparqlEndpoint\",  \"@type\": \"HookSparqlEndpointComunica\",  \"dockerfileClient\": \"input/dockerfiles/Dockerfile-comunica-hdt\",  \"resourceConstraints\": {\"@type\": \"StaticDockerResourceConstraints\",\"cpu_percentage\": 100  },  \"configClient\": \"input/comunica-hdt-config.json\",  \"contextClient\": \"input/comunica-hdt-context.json\",  \"additionalBinds\": [\"../../generated/dataset.hdt.index.v1-1:/tmp/dataset.hdt.index.v1-1\", \"../../generated/dataset.hdt:/tmp/dataset.hdt\"],  \"clientPort\": 3001,  \"clientLogLevel\": \"info\",  \"queryTimeout\": 500,  \"maxMemory\": 8192}",
+      "endpointUrl": "http://localhost:3001/sparql",
+      "endpointUrlExternal": "http://localhost:3001/sparql"
+    },
+    {
+      "name": "oxigraph",
+      "hookSparqlEndpoint": "{\"@id\": \"urn:jbr:watdiv:combination_2:hookSparqlEndpoint\",  \"@type\": \"HookDocker\",  \"dockerfile\": \"input/dockerfiles/Dockerfile-oxigraph\",  \"resourceConstraints\": {\"@type\": \"StaticDockerResourceConstraints\",\"cpu_percentage\": 100  },  \"additionalBinds\": [\"../../generated/dataset.nt:/tmp/dataset.nt\"],  \"additionalFilesPrepare\": [],  \"innerPort\": 3000,  \"outerPort\": 3001}",
+      "endpointUrl": "http://localhost:3001/query",
+      "endpointUrlExternal": "http://localhost:3001/"
+    },
+    {
+      "name": "oxigraph-js",
+      "hookSparqlEndpoint": "{\"@id\": \"urn:jbr:watdiv:combination_3:hookSparqlEndpoint\",  \"@type\": \"HookDocker\",  \"dockerfile\": \"input/dockerfiles/Dockerfile-oxigraph-js\",  \"resourceConstraints\": {\"@type\": \"StaticDockerResourceConstraints\",\"cpu_percentage\": 100  },  \"additionalBinds\": [\"../../generated/dataset.nt:/tmp/dataset.nt\"],  \"additionalFilesPrepare\": [\"input/oxigraph-js\"],  \"innerPort\": 3000,  \"outerPort\": 3001}",
+      "endpointUrl": "http://localhost:3001/sparql",
+      "endpointUrlExternal": "http://localhost:3001/sparql"
+    },
+    {
+      "name": "oxigraph-js-rdfjs",
+      "hookSparqlEndpoint": "{\"@id\": \"urn:jbr:watdiv:combination_4:hookSparqlEndpoint\",  \"@type\": \"HookDocker\",  \"dockerfile\": \"input/dockerfiles/Dockerfile-oxigraph-js-rdfjs\",  \"resourceConstraints\": {\"@type\": \"StaticDockerResourceConstraints\",\"cpu_percentage\": 100  },  \"additionalBinds\": [\"../../generated/dataset.nt:/tmp/dataset.nt\"],  \"additionalFilesPrepare\": [\"input/oxigraph-js\"],  \"innerPort\": 3000,  \"outerPort\": 3001}",
+      "endpointUrl": "http://localhost:3001/sparql",
+      "endpointUrlExternal": "http://localhost:3001/sparql"
+    },
+    {
+      "name": "jena",
+      "hookSparqlEndpoint": "{\"@id\": \"urn:jbr:watdiv:combination_5:hookSparqlEndpoint\",  \"@type\": \"HookDocker\",  \"dockerfile\": \"input/dockerfiles/Dockerfile-jena\",  \"resourceConstraints\": {\"@type\": \"StaticDockerResourceConstraints\",\"cpu_percentage\": 100  },  \"additionalBinds\": [\"../../generated/dataset.nt:/staging/dataset.nt\", \"input/jena.sh:/jena-fuseki/jbr-init.sh\"],  \"additionalFilesPrepare\": [],  \"innerPort\": 3000,  \"outerPort\": 3001}",
+      "endpointUrl": "http://localhost:3001/query",
+      "endpointUrlExternal": "http://localhost:3001/"
+    }
+  ]
 }

@@ -9,8 +9,8 @@
   "@type": "ExperimentBsbm",
   "productCount": 1000,
   "generateHdt": true,
-  "endpointUrl": "http://host.docker.internal:3001/sparql",
-  "endpointUrlExternal": "http://localhost:3001/sparql",
+  "endpointUrl": "%FACTOR-endpointUrl%",
+  "endpointUrlExternal": "%FACTOR-endpointUrlExternal%",
   "warmupRuns": 5,
   "runs": 10,
   "hookSparqlEndpoint": %FACTOR-hookSparqlEndpoint%
