@@ -9,4 +9,4 @@ COPY input/oxigraph-js/run.js /webapp/
 ENTRYPOINT [ "node", "--max-old-space-size=8192", "/webapp/run.js" ]
 EXPOSE 3000
 
-CMD [ "/tmp/dataset.nt" ]
+CMD [ "/tmp/dataset.nt", "rdfjs" ]

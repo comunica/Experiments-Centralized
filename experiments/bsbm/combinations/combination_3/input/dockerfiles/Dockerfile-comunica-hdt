@@ -1,4 +1,4 @@
-FROM comunica/query-sparql-hdt:latest
+FROM comunica/query-sparql-hdt:v4.0.2
 
 ARG CONFIG_CLIENT
 ARG QUERY_TIMEOUT

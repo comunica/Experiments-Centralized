@@ -1,0 +1,6 @@
+FROM stain/jena-fuseki:4.8.0
+
+ENTRYPOINT []
+EXPOSE 3000
+
+CMD chmod +x /jena-fuseki/jbr-init.sh && /jena-fuseki/jbr-init.sh
