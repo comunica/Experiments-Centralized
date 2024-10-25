@@ -1,0 +1,43 @@
+name: CI
+on: [push, pull_request]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+
+  validate:
+    name: Validate
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - macos-latest
+          - ubuntu-latest
+          - windows-latest
+        node-version:
+          - 18.x
+          - 20.x
+          - 22.x
+        experiment:
+          - bsbm
+          - watdiv
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Load dependency cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            **/node_modules
+          key: ${{ runner.os }}-${{ matrix.node-version }}-${{ matrix.experiment }}-modules-${{ secrets.CACHE_VERSION }}-${{ hashFiles('yarn.lock') }}
+      - name: Install dependencies and build
+        run: cd experiments/${{ matrix.experiment }} && npm ci
+      - name: Validate experiment
+        run: cd experiments/${{ matrix.experiment }} && npm run validate
