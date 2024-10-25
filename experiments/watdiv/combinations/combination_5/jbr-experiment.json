@@ -11,7 +11,7 @@
   "queryCount": 5,
   "queryRecurrence": 1,
   "generateHdt": true,
-  "endpointUrl": "http://localhost:3001/query",
+  "endpointUrl": "http://localhost:3001/mydataset/query",
   "endpointUrlExternal": "http://localhost:3001/",
   "queryRunnerReplication": 3,
   "queryRunnerWarmupRounds": 1,

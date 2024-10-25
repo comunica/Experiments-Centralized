@@ -6,8 +6,12 @@ const fs = require('node:fs');
 const url = require("url");
 const querystring = require("querystring");
 const { QueryEngine } = require("@comunica/query-sparql");
+const { DataFactory } = require("rdf-data-factory");
+const { BindingsFactory } = require("@comunica/utils-bindings-factory");
 const store = new oxigraph.Store();
 const comunicaEngine = new QueryEngine();
+const DF = new DataFactory();
+const BF = new BindingsFactory(DF);
 
 const rdfjs = process.argv[3] === 'rdfjs';
 
@@ -56,19 +60,45 @@ async function start() {
         // const { value: query } = await parseBody(req);
         console.log('GOT QUERY ' + query);
         // const mediaType = (req.headers['accept'].slice(0, Math.min(req.headers['accept'].indexOf(';') + 1), req.headers['accept'].indexOf(',') + 1)) || req.headers['accept'];
-        const mediaType = (req.headers['accept'].slice(0, Math.min(req.headers['accept'].indexOf(';')), req.headers['accept'].indexOf(','))) || req.headers['accept'];
+        const sliceIdx = Math.min(req.headers['accept'].indexOf(';'), req.headers['accept'].indexOf(','));
+        let mediaType = sliceIdx >= 0 ? req.headers['accept'].slice(0, sliceIdx) : req.headers['accept'];
         console.log('GOT ACCEPT HEADER ' + req.headers['accept']); // TODO
         console.log('GOT MEDIA TYPE ' + mediaType); // TODO
 
         if (rdfjs) {
-            const bindings = store.query(query, { use_default_graph_as_union: true });
+            const select = query.includes('SELECT');
+            const oxiResult = store.query(query, { use_default_graph_as_union: true });
             res.writeHead(200, { 'content-type': mediaType, 'Access-Control-Allow-Origin': '*' });
+            console.log(oxiResult); // TODO
+            let data;
 
-            const { data } = await comunicaEngine.resultToString({
-                resultType: 'bindings',
-                execute: () => Readable.from(bindings),
-                metadata: () => ({ variables: []}),
-            }, mediaType);
+            if (select) {
+                // Convert to proper bindings objects
+                const bindings = [];
+                for (const bindingsMap of oxiResult) {
+                    const record = {};
+                    for (let [ key, value ] of bindingsMap) {
+                        record[key] = value;
+                    }
+                    console.log(record); // TODO
+                    bindings.push(BF.fromRecord(record));
+                }
+
+                data = (await comunicaEngine.resultToString({
+                    resultType: 'bindings',
+                    execute: () => Readable.from(bindings),
+                    metadata: () => ({ variables: []}),
+                }, mediaType)).data;
+            } else {
+                // Handle as quads
+                mediaType = 'text/turtle';
+                data = (await comunicaEngine.resultToString({
+                    resultType: 'quads',
+                    execute: () => Readable.from(oxiResult),
+                    metadata: () => ({}),
+                }, mediaType)).data;
+            }
+
             data.on('error', (error) => {
                 stdout.write(`[500] Server error in results: ${error.message} \n`);
                 if (!response.writableEnded) {

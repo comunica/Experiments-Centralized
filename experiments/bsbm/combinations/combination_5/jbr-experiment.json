@@ -9,7 +9,7 @@
   "@type": "ExperimentBsbm",
   "productCount": 1000,
   "generateHdt": true,
-  "endpointUrl": "http://host.docker.internal:3001/query",
+  "endpointUrl": "http://host.docker.internal:3001/mydataset/query",
   "endpointUrlExternal": "http://localhost:3001/",
   "warmupRuns": 5,
   "runs": 10,
