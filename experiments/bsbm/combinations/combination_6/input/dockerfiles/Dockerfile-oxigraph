@@ -1,0 +1,12 @@
+FROM debian:bookworm-slim
+
+RUN apt-get -y update; apt-get -y install curl
+COPY --from=ghcr.io/oxigraph/oxigraph /usr/local/bin/oxigraph /usr/local/bin/oxigraph
+
+ENTRYPOINT []
+EXPOSE 3000
+
+CMD /usr/local/bin/oxigraph serve --location /data --bind 0.0.0.0:4000 & \
+    sleep 1 && curl -v -X POST -T "/tmp/dataset.nt" -H "content-type: application/n-triples" "http://127.0.0.1:4000/store?no_transaction" && \
+    kill $! && rm /data/LOCK && \
+    /usr/local/bin/oxigraph serve --location /data --bind 0.0.0.0:3000 --union-default-graph

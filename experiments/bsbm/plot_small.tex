@@ -43,7 +43,7 @@
   log base 10 number format code/.code={%
     $\pgfmathparse{10^(#1)}\pgfmathprintnumber{\pgfmathresult}$%
   },
-  cycle list/Spectral-7,
+  cycle list/Spectral-8,
 }
 
 \begin{document}
@@ -52,12 +52,12 @@
 \newenvironment{resultAxis}{
 \begin{axis}[
     xtick=data,
-    width=308pt,
+    width=352pt,
     height=96pt,
     ymin=0,
     %Y_MAX%
     bar width=2.75pt,
-    enlarge x limits={abs=12pt},
+    enlarge x limits={abs=14pt},
     symbolic x coords={1,2,3,4,6,7,8,9,10,11,12},
     % Don't show axis exponent
     ytick scale label code/.code={},
@@ -69,7 +69,7 @@
     axis on top,
     area legend,
     ylabel={Duration (s)},
-    cycle list name=Spectral-7,
+    cycle list name=Spectral-8,
     every axis plot/.append style={
         draw=none,
         fill,
@@ -87,19 +87,21 @@
 }{\end{axis}}
 \begin{tikzpicture}
 \begin{resultAxis}
-\addplot+[ybar, xshift=-6.875pt,legend image post style={xshift=6.875pt}] table [x=query, y expr=(\thisrow{0-mean} / 1000), y error plus expr=(\thisrow{0-plus} / 1000), y error minus expr=(\thisrow{0-minus} / 1000), col sep=semicolon]{"plot_small.csv"};
-\addplot+[ybar, xshift=-4.125pt,legend image post style={xshift=4.125pt}] table [x=query, y expr=(\thisrow{1-mean} / 1000), y error plus expr=(\thisrow{1-plus} / 1000), y error minus expr=(\thisrow{1-minus} / 1000), col sep=semicolon]{"plot_small.csv"};
-\addplot+[ybar, xshift=-1.375pt,legend image post style={xshift=1.375pt}] table [x=query, y expr=(\thisrow{2-mean} / 1000), y error plus expr=(\thisrow{2-plus} / 1000), y error minus expr=(\thisrow{2-minus} / 1000), col sep=semicolon]{"plot_small.csv"};
-\addplot+[ybar, xshift=1.375pt,legend image post style={xshift=-1.375pt}] table [x=query, y expr=(\thisrow{3-mean} / 1000), y error plus expr=(\thisrow{3-plus} / 1000), y error minus expr=(\thisrow{3-minus} / 1000), col sep=semicolon]{"plot_small.csv"};
-\addplot+[ybar, xshift=4.125pt,legend image post style={xshift=-4.125pt}] table [x=query, y expr=(\thisrow{4-mean} / 1000), y error plus expr=(\thisrow{4-plus} / 1000), y error minus expr=(\thisrow{4-minus} / 1000), col sep=semicolon]{"plot_small.csv"};
-\addplot+[ybar, xshift=6.875pt,legend image post style={xshift=-6.875pt}] table [x=query, y expr=(\thisrow{5-mean} / 1000), y error plus expr=(\thisrow{5-plus} / 1000), y error minus expr=(\thisrow{5-minus} / 1000), col sep=semicolon]{"plot_small.csv"};
-\addplot+[only marks,xshift=-6.875pt,mark=star,mark options={color=gray,scale=0.5}] table [x=query, y expr=(\thisrow{0-first-mean} / 1000), col sep=semicolon]{"plot_small.csv"};
-\addplot+[only marks,xshift=-4.125pt,mark=star,mark options={color=gray,scale=0.5}] table [x=query, y expr=(\thisrow{1-first-mean} / 1000), col sep=semicolon]{"plot_small.csv"};
-\addplot+[only marks,xshift=-1.375pt,mark=star,mark options={color=gray,scale=0.5}] table [x=query, y expr=(\thisrow{2-first-mean} / 1000), col sep=semicolon]{"plot_small.csv"};
-\addplot+[only marks,xshift=1.375pt,mark=star,mark options={color=gray,scale=0.5}] table [x=query, y expr=(\thisrow{3-first-mean} / 1000), col sep=semicolon]{"plot_small.csv"};
-\addplot+[only marks,xshift=4.125pt,mark=star,mark options={color=gray,scale=0.5}] table [x=query, y expr=(\thisrow{4-first-mean} / 1000), col sep=semicolon]{"plot_small.csv"};
-\addplot+[only marks,xshift=6.875pt,mark=star,mark options={color=gray,scale=0.5}] table [x=query, y expr=(\thisrow{5-first-mean} / 1000), col sep=semicolon]{"plot_small.csv"};
-\legend{Comunica-Memory,Comunica-HDT,Oxigraph-Rust,Oxigraph-JS,Oxigraph-JS-RDFJS,Jena}
+\addplot+[ybar, xshift=-8.25pt,legend image post style={xshift=8.25pt}] table [x=query, y expr=(\thisrow{0-mean} / 1000), y error plus expr=(\thisrow{0-plus} / 1000), y error minus expr=(\thisrow{0-minus} / 1000), col sep=semicolon]{"plot_small.csv"};
+\addplot+[ybar, xshift=-5.5pt,legend image post style={xshift=5.5pt}] table [x=query, y expr=(\thisrow{1-mean} / 1000), y error plus expr=(\thisrow{1-plus} / 1000), y error minus expr=(\thisrow{1-minus} / 1000), col sep=semicolon]{"plot_small.csv"};
+\addplot+[ybar, xshift=-2.75pt,legend image post style={xshift=2.75pt}] table [x=query, y expr=(\thisrow{2-mean} / 1000), y error plus expr=(\thisrow{2-plus} / 1000), y error minus expr=(\thisrow{2-minus} / 1000), col sep=semicolon]{"plot_small.csv"};
+\addplot+[ybar, xshift=0pt,legend image post style={xshift=0pt}] table [x=query, y expr=(\thisrow{3-mean} / 1000), y error plus expr=(\thisrow{3-plus} / 1000), y error minus expr=(\thisrow{3-minus} / 1000), col sep=semicolon]{"plot_small.csv"};
+\addplot+[ybar, xshift=2.75pt,legend image post style={xshift=-2.75pt}] table [x=query, y expr=(\thisrow{4-mean} / 1000), y error plus expr=(\thisrow{4-plus} / 1000), y error minus expr=(\thisrow{4-minus} / 1000), col sep=semicolon]{"plot_small.csv"};
+\addplot+[ybar, xshift=5.5pt,legend image post style={xshift=-5.5pt}] table [x=query, y expr=(\thisrow{5-mean} / 1000), y error plus expr=(\thisrow{5-plus} / 1000), y error minus expr=(\thisrow{5-minus} / 1000), col sep=semicolon]{"plot_small.csv"};
+\addplot+[ybar, xshift=8.25pt,legend image post style={xshift=-8.25pt}] table [x=query, y expr=(\thisrow{6-mean} / 1000), y error plus expr=(\thisrow{6-plus} / 1000), y error minus expr=(\thisrow{6-minus} / 1000), col sep=semicolon]{"plot_small.csv"};
+\addplot+[only marks,xshift=-8.25pt,mark=star,mark options={color=gray,scale=0.5}] table [x=query, y expr=(\thisrow{0-first-mean} / 1000), col sep=semicolon]{"plot_small.csv"};
+\addplot+[only marks,xshift=-5.5pt,mark=star,mark options={color=gray,scale=0.5}] table [x=query, y expr=(\thisrow{1-first-mean} / 1000), col sep=semicolon]{"plot_small.csv"};
+\addplot+[only marks,xshift=-2.75pt,mark=star,mark options={color=gray,scale=0.5}] table [x=query, y expr=(\thisrow{2-first-mean} / 1000), col sep=semicolon]{"plot_small.csv"};
+\addplot+[only marks,xshift=0pt,mark=star,mark options={color=gray,scale=0.5}] table [x=query, y expr=(\thisrow{3-first-mean} / 1000), col sep=semicolon]{"plot_small.csv"};
+\addplot+[only marks,xshift=2.75pt,mark=star,mark options={color=gray,scale=0.5}] table [x=query, y expr=(\thisrow{4-first-mean} / 1000), col sep=semicolon]{"plot_small.csv"};
+\addplot+[only marks,xshift=5.5pt,mark=star,mark options={color=gray,scale=0.5}] table [x=query, y expr=(\thisrow{5-first-mean} / 1000), col sep=semicolon]{"plot_small.csv"};
+\addplot+[only marks,xshift=8.25pt,mark=star,mark options={color=gray,scale=0.5}] table [x=query, y expr=(\thisrow{6-first-mean} / 1000), col sep=semicolon]{"plot_small.csv"};
+\legend{Comunica-Memory,Comunica-HDT,Oxigraph-Rust,Oxigraph-JS,Oxigraph-JS-RDFJS,Jena,Blazegraph}
 \end{resultAxis}
 \end{tikzpicture}
 \end{document}
