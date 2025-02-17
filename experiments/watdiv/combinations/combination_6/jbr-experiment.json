@@ -18,5 +18,5 @@
   "queryRunnerRequestDelay": 0,
   "queryRunnerEndpointAvailabilityCheckTimeout": 1000,
   "queryRunnerUrlParams": {},
-  "hookSparqlEndpoint": {"@id": "urn:jbr:bsbm:combination_6:hookSparqlEndpoint",  "@type": "HookDocker",  "dockerfile": "input/dockerfiles/Dockerfile-blazegraph",  "resourceConstraints": {"@type": "StaticDockerResourceConstraints","cpu_percentage": 100  },  "additionalBinds": ["../../generated/dataset.nt:/staging/dataset.nt", "input/blazegraph.sh:/var/lib/jetty/jbr-init.sh"],  "additionalFilesPrepare": [],  "innerPort": 8080,  "outerPort": 3001}
+  "hookSparqlEndpoint": {"@id": "urn:jbr:watdiv:combination_6:hookSparqlEndpoint",  "@type": "HookDocker",  "dockerfile": "input/dockerfiles/Dockerfile-blazegraph",  "resourceConstraints": {"@type": "StaticDockerResourceConstraints","cpu_percentage": 100  },  "additionalBinds": ["../../generated/dataset.nt:/staging/dataset.nt", "input/blazegraph.sh:/var/lib/jetty/jbr-init.sh"],  "additionalFilesPrepare": [],  "innerPort": 8080,  "outerPort": 3001}
 }

@@ -12,7 +12,7 @@
     "jbr": "cross-env NODE_OPTIONS=--max-old-space-size=8192 jbr",
     "validate": "jbr validate",
     "plot": "psbr csv bsbm combinations/combination_*/output && npm run plot-small && npm run plot-large",
-    "plot-small": "psbr tex query combinations/combination_*/output -n 'plot_small' -q '^[^5]' --svg --overrideCombinationLabels Comunica-Memory,Comunica-HDT,Oxigraph-Rust,Oxigraph-JS,Oxigraph-JS-RDFJS,Jena,Blazegraph",
-    "plot-large": "psbr tex query combinations/combination_*/output -n 'plot_large' -q '^5' --svg --overrideCombinationLabels Comunica-Memory,Comunica-HDT,Oxigraph-Rust,Oxigraph-JS,Oxigraph-JS-RDFJS,Jena,Blazegraph"
+    "plot-small": "psbr tex query combinations/combination_*/output -n 'plot_small' -q '^[^5]' --svg --overrideCombinationLabels Comunica-Memory,Comunica-HDT,Oxigraph-Rust,Oxigraph-JS,Oxigraph-JS-RDFJS,Jena,Blazegraph,Virtuoso",
+    "plot-large": "psbr tex query combinations/combination_*/output -n 'plot_large' -q '^5' --svg --overrideCombinationLabels Comunica-Memory,Comunica-HDT,Oxigraph-Rust,Oxigraph-JS,Oxigraph-JS-RDFJS,Jena,Blazegraph,Virtuoso"
   }
 }

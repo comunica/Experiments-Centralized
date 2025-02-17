@@ -1,0 +1,9 @@
+FROM openlink/virtuoso-opensource-7:7.2.14
+
+RUN apt-get -y update; apt-get -y install curl
+
+ENTRYPOINT []
+EXPOSE 8891
+
+USER root
+CMD chmod +x /jbr-init.sh && /jbr-init.sh
