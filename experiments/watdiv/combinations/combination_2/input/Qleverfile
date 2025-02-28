@@ -1,0 +1,16 @@
+[data]
+NAME             = experiment
+DESCRIPTION      = experiment
+
+[index]
+INPUT_FILES     = ../staging/dataset.nt
+CAT_INPUT_FILES = cat ${INPUT_FILES}
+SETTINGS_JSON   = { "ascii-prefixes-only": false, "num-triples-per-batch": 1000000 }
+TEXT_INDEX      = from_literals
+
+[server]
+PORT               = 7015
+MEMORY_FOR_QUERIES = 2G
+
+[runtime]
+SYSTEM = native

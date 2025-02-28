@@ -1,0 +1,8 @@
+FROM adfreiburg/qlever:commit-8fe0642
+# February 22 2025
+
+ENTRYPOINT []
+EXPOSE 7015
+
+USER root
+CMD chmod +x /jbr-init.sh && /jbr-init.sh
