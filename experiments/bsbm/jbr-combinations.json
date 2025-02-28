@@ -53,6 +53,12 @@
       "hookSparqlEndpoint": "{\"@id\": \"urn:jbr:bsbm:combination_7:hookSparqlEndpoint\",  \"@type\": \"HookDocker\",  \"dockerfile\": \"input/dockerfiles/Dockerfile-virtuoso\",  \"resourceConstraints\": {\"@type\": \"StaticDockerResourceConstraints\",\"cpu_percentage\": 100  },  \"additionalBinds\": [\"../../generated/dataset.nt:/staging/dataset.nt\", \"input/virtuoso.sh:/jbr-init.sh\"],  \"additionalFilesPrepare\": [],  \"innerPort\": 8891,  \"outerPort\": 3001}",
       "endpointUrl": "http://host.docker.internal:3001/sparql?graph-uri=urn:default-graph",
       "endpointUrlExternal": "http://localhost:3001/"
+    },
+    {
+      "name": "graphdb",
+      "hookSparqlEndpoint": "{\"@id\": \"urn:jbr:bsbm:combination_8:hookSparqlEndpoint\",  \"@type\": \"HookDocker\",  \"dockerfile\": \"input/dockerfiles/Dockerfile-graphdb\",  \"resourceConstraints\": {\"@type\": \"StaticDockerResourceConstraints\",\"cpu_percentage\": 100  },  \"additionalBinds\": [\"../../generated/dataset.nt:/staging/dataset.nt\", \"input/graphdb.sh:/jbr-init.sh\"],  \"additionalFilesPrepare\": [],  \"innerPort\": 7200,  \"outerPort\": 3001}",
+      "endpointUrl": "http://host.docker.internal:3001/repositories/experiment",
+      "endpointUrlExternal": "http://localhost:3001/rest/repositories"
     }
   ]
 }

@@ -1,0 +1,9 @@
+FROM ontotext/graphdb:10.6.4
+
+RUN apt-get -y update; apt-get -y install curl
+
+ENTRYPOINT []
+EXPOSE 7200
+
+USER root
+CMD chmod +x /jbr-init.sh && /jbr-init.sh
