@@ -2,7 +2,7 @@
   "private": true,
   "name": "bsbm",
   "dependencies": {
-    "@jbr-experiment/bsbm": "^5.5.0",
+    "@jbr-experiment/bsbm": "^5.6.0",
     "@jbr-hook/docker": "^5.5.0",
     "@jbr-hook/sparql-endpoint-comunica": "^5.5.0",
     "cross-env": "^7.0.3",
