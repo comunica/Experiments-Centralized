@@ -1,0 +1,17 @@
+{
+  "name": "quadstore-exp",
+  "private": true,
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "quadstore": "^15.0.0",
+    "classic-level": "^2.0.0",
+    "@comunica/query-sparql": "^4.1.0"
+  }
+}

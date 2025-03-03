@@ -5,7 +5,7 @@
     "https://linkedsoftwaredependencies.org/bundles/npm/@jbr-hook/sparql-endpoint-comunica/^5.0.0/components/context.jsonld",
     "https://linkedsoftwaredependencies.org/bundles/npm/@jbr-hook/docker/^5.0.0/components/context.jsonld"
   ],
-  "@id": "urn:jbr:watdiv:combination_9",
+  "@id": "urn:jbr:watdiv:combination_10",
   "@type": "ExperimentWatDiv",
   "datasetScale": 10,
   "queryCount": 5,
@@ -18,5 +18,5 @@
   "queryRunnerRequestDelay": 0,
   "queryRunnerEndpointAvailabilityCheckTimeout": 1000,
   "queryRunnerUrlParams": {},
-  "hookSparqlEndpoint": {"@id": "urn:jbr:watdiv:combination_9:hookSparqlEndpoint",  "@type": "HookDocker",  "dockerfile": "input/dockerfiles/Dockerfile-qlever",  "resourceConstraints": {"@type": "StaticDockerResourceConstraints","cpu_percentage": 100  },  "additionalBinds": ["../../generated/dataset.nt:/staging/dataset.nt", "input/qlever.sh:/jbr-init.sh", "input/Qleverfile:/qlever/Qleverfile"],  "additionalFilesPrepare": [],  "innerPort": 7015,  "outerPort": 3001}
+  "hookSparqlEndpoint": {"@id": "urn:jbr:watdiv:combination_10:hookSparqlEndpoint",  "@type": "HookDocker",  "dockerfile": "input/dockerfiles/Dockerfile-qlever",  "resourceConstraints": {"@type": "StaticDockerResourceConstraints","cpu_percentage": 100  },  "additionalBinds": ["../../generated/dataset.nt:/staging/dataset.nt", "input/qlever.sh:/jbr-init.sh", "input/Qleverfile:/qlever/Qleverfile"],  "additionalFilesPrepare": [],  "innerPort": 7015,  "outerPort": 3001}
 }

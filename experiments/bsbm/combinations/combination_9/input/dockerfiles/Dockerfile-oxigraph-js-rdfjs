@@ -1,0 +1,12 @@
+FROM node:22-slim
+
+RUN mkdir /webapp
+COPY input/oxigraph-js/package.json /webapp/
+COPY input/oxigraph-js/package-lock.json /webapp/
+RUN cd /webapp && npm install
+COPY input/oxigraph-js/run.js /webapp/
+
+ENTRYPOINT [ "node", "--max-old-space-size=8192", "/webapp/run.js" ]
+EXPOSE 3000
+
+CMD [ "/tmp/dataset.nt", "rdfjs" ]
