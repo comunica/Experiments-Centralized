@@ -1,6 +1,7 @@
-FROM ontotext/graphdb:10.6.4
+FROM eclipse-temurin:11-jdk-noble
 
 RUN apt-get -y update; apt-get -y install curl
+COPY --from=ontotext/graphdb:10.6.4 /opt/graphdb/ /opt/graphdb/
 
 ENTRYPOINT []
 EXPOSE 7200
