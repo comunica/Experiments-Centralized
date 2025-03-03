@@ -10,7 +10,7 @@ TEXT_INDEX      = from_literals
 
 [server]
 PORT               = 7015
-MEMORY_FOR_QUERIES = 2G
+MEMORY_FOR_QUERIES = 5G
 
 [runtime]
 SYSTEM = native
