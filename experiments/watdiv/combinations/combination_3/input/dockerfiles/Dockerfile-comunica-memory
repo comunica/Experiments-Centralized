@@ -1,4 +1,4 @@
-FROM comunica/query-sparql-file:v4.1.0
+FROM comunica/query-sparql-file@sha256:3e951dbce1b880eafeb1cf34d62d8186883dbff095ee87c763340ac88b3d7588
 
 ARG CONFIG_CLIENT
 ARG QUERY_TIMEOUT
