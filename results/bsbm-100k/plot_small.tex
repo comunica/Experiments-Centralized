@@ -1,0 +1,107 @@
+\documentclass[preview]{standalone}
+\usepackage[utf8]{inputenc}
+
+
+% Page setup
+\usepackage{amsmath}
+
+% Typography
+\usepackage[scaled]{helvet}
+\let\familydefault\sfdefault
+\usepackage{sansmath}
+\sansmath
+
+\usepackage[usenames,svgnames]{xcolor}
+\usepackage{tikz,pgfplots}
+\usetikzlibrary{arrows,positioning,shapes,calc,intersections,patterns}
+\usepgfplotslibrary{colorbrewer}
+
+\newcommand\plotfontsize{\fontsize{9}{9}\selectfont}
+\pgfplotsset{compat=1.9,
+  axis lines=left,
+  every axis/.append style={
+    font=\plotfontsize,
+  },
+  label style={
+    font=\plotfontsize\bfseries,
+  },
+  tick label style={
+    font=\plotfontsize\bfseries,
+  },
+  xtick style={
+    draw=none,
+  },
+  legend cell align=left,
+  legend style={
+    /tikz/every even column/.append style={column sep=.3em},
+    draw=none, fill=none,
+    inner sep=0pt, outer sep=0pt,
+    anchor=north east,
+    at={(1.0,1.0)},
+    text height=3pt,
+  },
+  log base 10 number format code/.code={%
+    $\pgfmathparse{10^(#1)}\pgfmathprintnumber{\pgfmathresult}$%
+  },
+  cycle list/Dark2,
+}
+
+\begin{document}
+\pagestyle{empty}
+
+\newenvironment{resultAxis}{
+\begin{axis}[
+    xtick=data,
+    width=252pt,
+    height=96pt,
+    ymin=0,
+    ymax=0.15,
+    bar width=2.75pt,
+    enlarge x limits={abs=12pt},
+    symbolic x coords={1,2,3,4,7,8,10,11,12},
+    % Don't show axis exponent
+    ytick scale label code/.code={},
+    scaled y ticks=false,
+    x axis line style={draw=none},
+    % reverse legend,
+    scale only axis,
+    clip=false,
+    axis on top,
+    area legend,
+    ylabel={Duration (s)},
+    cycle list name=Dark2,
+    every axis plot/.append style={
+        draw=none,
+        fill,
+    },
+    error bars/error bar style={
+        black,
+        dashed,
+    },
+    error bars/error mark options={
+        line width=1pt,mark size=0.5pt,rotate=90
+    },
+    error bars/y dir=both,
+    error bars/y explicit,
+]
+}{\end{axis}}
+\begin{tikzpicture}
+\begin{resultAxis}
+\pgfplotsset{cycle list shift=1}
+\addplot+[ybar, xshift=-6.875pt,legend image post style={xshift=6.875pt}] table [x=query, y expr=(\thisrow{0-mean} / 1000), y error plus expr=(\thisrow{0-plus} / 1000), y error minus expr=(\thisrow{0-minus} / 1000), col sep=semicolon]{"plot_small.csv"};
+\addplot+[ybar, xshift=-4.125pt,legend image post style={xshift=4.125pt}] table [x=query, y expr=(\thisrow{1-mean} / 1000), y error plus expr=(\thisrow{1-plus} / 1000), y error minus expr=(\thisrow{1-minus} / 1000), col sep=semicolon]{"plot_small.csv"};
+\addplot+[ybar, xshift=-1.375pt,legend image post style={xshift=1.375pt}] table [x=query, y expr=(\thisrow{2-mean} / 1000), y error plus expr=(\thisrow{2-plus} / 1000), y error minus expr=(\thisrow{2-minus} / 1000), col sep=semicolon]{"plot_small.csv"};
+\addplot+[ybar, xshift=1.375pt,legend image post style={xshift=-1.375pt}] table [x=query, y expr=(\thisrow{3-mean} / 1000), y error plus expr=(\thisrow{3-plus} / 1000), y error minus expr=(\thisrow{3-minus} / 1000), col sep=semicolon]{"plot_small.csv"};
+\addplot+[ybar, xshift=4.125pt,legend image post style={xshift=-4.125pt}] table [x=query, y expr=(\thisrow{4-mean} / 1000), y error plus expr=(\thisrow{4-plus} / 1000), y error minus expr=(\thisrow{4-minus} / 1000), col sep=semicolon]{"plot_small.csv"};
+\addplot+[ybar, xshift=6.875pt,legend image post style={xshift=-6.875pt}] table [x=query, y expr=(\thisrow{5-mean} / 1000), y error plus expr=(\thisrow{5-plus} / 1000), y error minus expr=(\thisrow{5-minus} / 1000), col sep=semicolon]{"plot_small.csv"};
+\pgfplotsset{cycle list shift=1}
+\addplot+[only marks,xshift=-6.875pt,mark=star,mark options={color=gray,scale=0.5}] table [x=query, y expr=(\thisrow{0-first-mean} / 1000), col sep=semicolon]{"plot_small.csv"};
+\addplot+[only marks,xshift=-4.125pt,mark=star,mark options={color=gray,scale=0.5}] table [x=query, y expr=(\thisrow{1-first-mean} / 1000), col sep=semicolon]{"plot_small.csv"};
+\addplot+[only marks,xshift=-1.375pt,mark=star,mark options={color=gray,scale=0.5}] table [x=query, y expr=(\thisrow{2-first-mean} / 1000), col sep=semicolon]{"plot_small.csv"};
+\addplot+[only marks,xshift=1.375pt,mark=star,mark options={color=gray,scale=0.5}] table [x=query, y expr=(\thisrow{3-first-mean} / 1000), col sep=semicolon]{"plot_small.csv"};
+\addplot+[only marks,xshift=4.125pt,mark=star,mark options={color=gray,scale=0.5}] table [x=query, y expr=(\thisrow{4-first-mean} / 1000), col sep=semicolon]{"plot_small.csv"};
+\addplot+[only marks,xshift=6.875pt,mark=star,mark options={color=gray,scale=0.5}] table [x=query, y expr=(\thisrow{5-first-mean} / 1000), col sep=semicolon]{"plot_small.csv"};
+\legend{Comunica-HDT,Jena,Blazegraph,GraphDB,Virtuoso,Oxigraph}
+\end{resultAxis}
+\end{tikzpicture}
+\end{document}
