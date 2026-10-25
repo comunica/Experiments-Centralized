@@ -10,8 +10,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "oxigraph": "^0.4.0",
-    "rdf-parse": "^3.0.0",
-    "@comunica/query-sparql": "^4.0.2"
+    "@comunica/query-sparql": "^4.0.2",
+    "oxigraph": "^0.5.13",
+    "rdf-parse": "^3.0.0"
   }
 }

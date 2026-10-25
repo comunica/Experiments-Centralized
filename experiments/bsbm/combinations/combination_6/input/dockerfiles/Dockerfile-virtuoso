@@ -1,6 +1,4 @@
-FROM openlink/virtuoso-opensource-7:7.2.14
-
-RUN apt-get -y update; apt-get -y install curl
+FROM openlink/virtuoso-opensource-7:7.2.17
 
 ENTRYPOINT []
 EXPOSE 8891
