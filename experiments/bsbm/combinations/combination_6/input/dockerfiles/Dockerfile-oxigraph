@@ -1,7 +1,7 @@
 FROM debian:bookworm-slim
 
 RUN apt-get -y update; apt-get -y install curl
-COPY --from=ghcr.io/oxigraph/oxigraph /usr/local/bin/oxigraph /usr/local/bin/oxigraph
+COPY --from=ghcr.io/oxigraph/oxigraph:0.5.13 /usr/local/bin/oxigraph /usr/local/bin/oxigraph
 
 ENTRYPOINT []
 EXPOSE 3000

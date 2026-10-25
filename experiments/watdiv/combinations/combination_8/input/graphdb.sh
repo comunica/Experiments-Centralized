@@ -1,8 +1,11 @@
 #!/bin/sh
 # Inspired by https://github.com/Ontotext-AD/graphdb-docker/blob/master/Dockerfile
 
+# Disable the free disk space check, which is percentage-based and refuses data loading on large disks
+GRAPHDB_OPTS="-Dgraphdb.health.minimal.free.storage.enabled=false"
+
 # Start temporary server on a different port
-/opt/graphdb/dist/bin/graphdb -Dgraphdb.connector.port=7201 &
+/opt/graphdb/dist/bin/graphdb $GRAPHDB_OPTS -Dgraphdb.connector.port=7201 &
 pid=$!
 
 # Wait until server is up
@@ -221,4 +224,4 @@ kill -TERM $pid
 
 # Start server on actual port
 echo ">>> Starting final server"
-/opt/graphdb/dist/bin/graphdb
+/opt/graphdb/dist/bin/graphdb $GRAPHDB_OPTS

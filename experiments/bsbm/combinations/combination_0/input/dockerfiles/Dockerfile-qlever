@@ -1,5 +1,5 @@
-FROM adfreiburg/qlever:commit-8fe0642
-# February 22 2025
+FROM adfreiburg/qlever:commit-afc421d8f2
+# October 24 2026
 
 ENTRYPOINT []
 EXPOSE 7015
