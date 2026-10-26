@@ -4,7 +4,7 @@
     "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/config-query-sparql-hdt/^5.0.0/components/context.jsonld"
   ],
   "import": [
-    "ccqs:config/config-default.json",
+    "ccqs:config/config-default-v5-4-1.json",
     "ccqsh:config/query-source-identify/actors.json"
   ]
 }

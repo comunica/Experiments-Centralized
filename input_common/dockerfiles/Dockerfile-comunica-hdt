@@ -1,6 +1,7 @@
 # Dev build of Comunica master (commit 8b461dd), extended with the HDT actor from comunica-feature-hdt.
 # The dev image resolves @comunica packages from a build-time registry, so we point that scope back to npm.
 # Already installed (master) @comunica packages are kept, so only the HDT-specific packages are added.
+# When bumping, match the versioned config import in comunica-hdt-config.json to config/config-default.json in this image.
 FROM comunica/query-sparql-file:dev@sha256:803182359b8824f357a27be6b7683eeddcdb4557dc3f4935c55e2de0bf81cf56
 
 RUN npm config set @comunica:registry https://registry.npmjs.org/ && \
