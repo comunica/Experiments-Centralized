@@ -1,4 +1,5 @@
-FROM comunica/query-sparql-file@sha256:3e951dbce1b880eafeb1cf34d62d8186883dbff095ee87c763340ac88b3d7588
+# Dev build of Comunica master (commit 8b461dd)
+FROM comunica/query-sparql-file:dev@sha256:803182359b8824f357a27be6b7683eeddcdb4557dc3f4935c55e2de0bf81cf56
 
 ARG CONFIG_CLIENT
 ARG QUERY_TIMEOUT

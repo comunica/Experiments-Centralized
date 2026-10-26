@@ -1,4 +1,11 @@
-FROM comunica/query-sparql-hdt@sha256:7bb79648d483f4f76a0d22f1a0bae798f42418a3410e9757348b193696f6ad7b
+# Dev build of Comunica master (commit 8b461dd), extended with the HDT actor from comunica-feature-hdt.
+# The dev image resolves @comunica packages from a build-time registry, so we point that scope back to npm.
+# Already installed (master) @comunica packages are kept, so only the HDT-specific packages are added.
+FROM comunica/query-sparql-file:dev@sha256:803182359b8824f357a27be6b7683eeddcdb4557dc3f4935c55e2de0bf81cf56
+
+RUN npm config set @comunica:registry https://registry.npmjs.org/ && \
+    npm install --no-save --omit=dev @comunica/actor-query-source-identify-hdt@5.0.1 @comunica/config-query-sparql-hdt@5.0.1 && \
+    test -f node_modules/hdt/build/Release/hdt.node
 
 ARG CONFIG_CLIENT
 ARG QUERY_TIMEOUT
