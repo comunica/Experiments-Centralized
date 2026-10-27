@@ -11,7 +11,7 @@ These results are discussed on https://comunica.dev/performance/.
 Besides query execution times, each experiment run records how long each endpoint takes to start:
 
 * **Load time** (`combinations/combination_*/output/logs/load-time.csv`, written by jbr): time from starting the endpoint until it is available for queries.
-* **Ingestion time**: the part of the load time spent on loading the dataset. Each engine's startup script prints it to its log as a `JBR_INGESTION_TIME_S <seconds>` line, measured around only its loading step. For Comunica, it is the duration of the preload query (`sparql-endpoint-comunica-preload-time.csv`), if the hook's `preloadQuery` is set.
+* **Ingestion time**: the part of the load time spent on loading the dataset. Each engine's startup script prints it to its log as a `JBR_INGESTION_TIME_S <seconds>` line, measured around only its loading step. For Comunica, it is the duration of the ASK query sent by the hook on startup (`sparql-endpoint-comunica-preload-time.csv`), enabled via its `preloadQuery` option.
 
 After running an experiment, `npm run plot-load` summarizes these into `plot_load_times.csv` and `plot_load_times.svg`.
 
