@@ -25,6 +25,7 @@ echo "Loading dataset..."
 curl -X POST \
   --data-binary @/staging/dataset.nt \
   --header 'Content-Type:text/plain' \
+  --write-out '\nJBR_INGESTION_TIME_S %{time_total} (HTTP %{http_code})\n' \
   http://localhost:8000/bigdata/sparql
 echo "Dataset has been loaded, stopping temporary server"
 kill -TERM $pid

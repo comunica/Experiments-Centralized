@@ -18,12 +18,15 @@ done
 echo ">>> Loading dataset..."
 mkdir -p /usr/share/proj
 cp /staging/dataset.nt /usr/share/proj/dataset.nt
+ingestion_start=$(date +%s%3N)
 /virtuoso-entrypoint.sh isql <<EOF
 SPARQL CREATE GRAPH <urn:default-graph>;
 ld_dir('/usr/share/proj', 'dataset.nt', 'urn:default-graph');
 rdf_loader_run();
 checkpoint;
 EOF
+ingestion_time=$(( $(date +%s%3N) - ingestion_start ))
+echo "JBR_INGESTION_TIME_S $(( ingestion_time / 1000 )).$(printf %03d $(( ingestion_time % 1000 )))"
 echo ">>> Dataset has been loaded, stopping temporary server"
 kill -TERM $pid
 

@@ -4,15 +4,16 @@
   "dependencies": {
     "@jbr-experiment/bsbm": "^6.2.0",
     "@jbr-hook/docker": "^6.2.0",
-    "@jbr-hook/sparql-endpoint-comunica": "^6.2.0",
+    "@jbr-hook/sparql-endpoint-comunica": "^6.2.2",
     "cross-env": "^7.0.3",
     "jbr": "^6.2.0"
   },
   "scripts": {
     "jbr": "cross-env NODE_OPTIONS=--max-old-space-size=8192 jbr",
     "validate": "jbr validate",
-    "plot": "psbr csv bsbm combinations/combination_*/output && npm run plot-small && npm run plot-large",
+    "plot": "psbr csv bsbm combinations/combination_*/output && npm run plot-small && npm run plot-large && npm run plot-load",
     "plot-small": "psbr tex query combinations/combination_*/output -n 'plot_small' -q '^[^5]' --svg --overrideCombinationLabels Comunica-Memory,Comunica-HDT,Oxigraph-Rust,Oxigraph-JS,Oxigraph-JS-RDFJS,Jena,Blazegraph,Virtuoso,GraphDB",
-    "plot-large": "psbr tex query combinations/combination_*/output -n 'plot_large' -q '^5' --svg --overrideCombinationLabels Comunica-Memory,Comunica-HDT,Oxigraph-Rust,Oxigraph-JS,Oxigraph-JS-RDFJS,Jena,Blazegraph,Virtuoso,GraphDB"
+    "plot-large": "psbr tex query combinations/combination_*/output -n 'plot_large' -q '^5' --svg --overrideCombinationLabels Comunica-Memory,Comunica-HDT,Oxigraph-Rust,Oxigraph-JS,Oxigraph-JS-RDFJS,Jena,Blazegraph,Virtuoso,GraphDB",
+    "plot-load": "node ../../scripts/load-times.js ."
   }
 }

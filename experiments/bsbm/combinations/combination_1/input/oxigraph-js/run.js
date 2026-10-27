@@ -30,9 +30,11 @@ function loadDataset() {
         // });
 
         console.time('import');
+        const ingestionStart = performance.now();
         const data = fs.readFileSync(process.argv[2], 'utf-8');
         store.load(data, { format: 'application/n-triples' });
         console.timeEnd('import');
+        console.log(`JBR_INGESTION_TIME_S ${((performance.now() - ingestionStart) / 1000).toFixed(3)}`);
         resolve();
     });
 }
