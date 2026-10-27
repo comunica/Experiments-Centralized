@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Summarizes endpoint load times of all combinations of an experiment into a CSV file and an SVG bar chart.
+// Summarizes load and ingestion times of all combinations of an experiment into a CSV file, and plots ingestion times as an SVG bar chart.
 //
 // Usage: node scripts/load-times.js <experiment-dir> [--labels A,B,C] [--name plot_load_times]
 //
@@ -81,36 +81,32 @@ function escapeXml(text) {
   return text.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;');
 }
 
-// Horizontal bars: ingestion time, plus the remainder of the load time (startup and other overhead)
+// Horizontal bars of ingestion time only, since startup time is not relevant for comparing engines
 function toSvg(rows) {
   const barHeight = 20;
   const gap = 8;
   const labelWidth = 160;
   const plotWidth = 480;
-  const top = 30;
-  const maxSeconds = Math.max(...rows.map(row => row.loadTime)) / 1000;
-  const scale = plotWidth / maxSeconds;
+  const top = 10;
+  const maxSeconds = Math.max(...rows.map(row => row.ingestionTime ?? 0)) / 1000;
+  const scale = maxSeconds > 0 ? plotWidth / maxSeconds : 0;
   const height = top + rows.length * (barHeight + gap) + 40;
   const parts = [
-    `<svg xmlns="http://www.w3.org/2000/svg" width="${labelWidth + plotWidth + 200}" height="${height}" font-family="sans-serif" font-size="12">`,
-    `<rect x="${labelWidth}" y="6" width="12" height="12" fill="#2a6f97"/><text x="${labelWidth + 16}" y="16">Ingestion</text>`,
-    `<rect x="${labelWidth + 90}" y="6" width="12" height="12" fill="#a9cce3"/><text x="${labelWidth + 106}" y="16">Other startup</text>`,
+    `<svg xmlns="http://www.w3.org/2000/svg" width="${labelWidth + plotWidth + 80}" height="${height}" font-family="sans-serif" font-size="12">`,
   ];
   rows.forEach((row, i) => {
     const y = top + i * (barHeight + gap);
-    const ingestionWidth = row.ingestionTime === undefined ? 0 : row.ingestionTime / 1000 * scale;
-    const totalWidth = row.loadTime / 1000 * scale;
+    const width = row.ingestionTime === undefined ? 0 : row.ingestionTime / 1000 * scale;
+    const label = row.ingestionTime === undefined ? 'n/a' : `${(row.ingestionTime / 1000).toFixed(1)}s`;
     parts.push(`<text x="${labelWidth - 6}" y="${y + 14}" text-anchor="end">${escapeXml(row.label)}</text>`);
-    parts.push(`<rect x="${labelWidth}" y="${y}" width="${ingestionWidth.toFixed(1)}" height="${barHeight}" fill="#2a6f97"/>`);
-    parts.push(`<rect x="${(labelWidth + ingestionWidth).toFixed(1)}" y="${y}" width="${Math.max(totalWidth - ingestionWidth, 0).toFixed(1)}" height="${barHeight}" fill="#a9cce3"/>`);
-    const ingestionLabel = row.ingestionTime === undefined ? 'n/a' : `${(row.ingestionTime / 1000).toFixed(1)}s`;
-    parts.push(`<text x="${(labelWidth + totalWidth + 4).toFixed(1)}" y="${y + 14}">${(row.loadTime / 1000).toFixed(1)}s (ingestion ${ingestionLabel})</text>`);
+    parts.push(`<rect x="${labelWidth}" y="${y}" width="${width.toFixed(1)}" height="${barHeight}" fill="#2a6f97"/>`);
+    parts.push(`<text x="${(labelWidth + width + 4).toFixed(1)}" y="${y + 14}">${label}</text>`);
   });
   const axisY = top + rows.length * (barHeight + gap) + 4;
   parts.push(`<line x1="${labelWidth}" y1="${axisY}" x2="${labelWidth + plotWidth}" y2="${axisY}" stroke="#555"/>`);
   parts.push(`<text x="${labelWidth}" y="${axisY + 16}">0</text>`);
   parts.push(`<text x="${labelWidth + plotWidth}" y="${axisY + 16}" text-anchor="end">${maxSeconds.toFixed(1)}s</text>`);
-  parts.push(`<text x="${labelWidth + plotWidth / 2}" y="${axisY + 32}" text-anchor="middle">Endpoint load time</text>`);
+  parts.push(`<text x="${labelWidth + plotWidth / 2}" y="${axisY + 32}" text-anchor="middle">Data ingestion time</text>`);
   parts.push('</svg>');
   return `${parts.join('\n')}\n`;
 }
