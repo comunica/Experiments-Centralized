@@ -8,13 +8,13 @@
   "combinations": [
     {
       "name": "comunica-memory",
-      "hookSparqlEndpoint": "{\"@id\": \"urn:jbr:watdiv:combination_0:hookSparqlEndpoint\",  \"@type\": \"HookSparqlEndpointComunica\",  \"dockerfileClient\": \"input/dockerfiles/Dockerfile-comunica-memory\",  \"resourceConstraints\": {\"@type\": \"StaticDockerResourceConstraints\",\"cpu_percentage\": 100  },  \"configClient\": \"input/comunica-memory-config.json\",  \"contextClient\": \"input/comunica-memory-context.json\",  \"additionalBinds\": [\"../../generated/dataset.nt:/tmp/dataset.nt\"],  \"clientPort\": 3001,  \"clientLogLevel\": \"info\",  \"queryTimeout\": 500,  \"maxMemory\": 8192}",
+      "hookSparqlEndpoint": "{\"@id\": \"urn:jbr:watdiv:combination_0:hookSparqlEndpoint\",  \"@type\": \"HookSparqlEndpointComunica\",  \"dockerfileClient\": \"input/dockerfiles/Dockerfile-comunica-memory\",  \"resourceConstraints\": {\"@type\": \"StaticDockerResourceConstraints\",\"cpu_percentage\": 100  },  \"configClient\": \"input/comunica-memory-config.json\",  \"contextClient\": \"input/comunica-memory-context.json\",  \"additionalBinds\": [\"../../generated/dataset.nt:/tmp/dataset.nt\"],  \"clientPort\": 3001,  \"clientLogLevel\": \"info\",  \"queryTimeout\": 500,  \"maxMemory\": 8192,  \"preloadQuery\": true}",
       "endpointUrl": "http://localhost:3001/sparql",
       "endpointUrlExternal": "http://localhost:3001/sparql"
     },
     {
       "name": "comunica-hdt",
-      "hookSparqlEndpoint": "{\"@id\": \"urn:jbr:watdiv:combination_1:hookSparqlEndpoint\",  \"@type\": \"HookSparqlEndpointComunica\",  \"dockerfileClient\": \"input/dockerfiles/Dockerfile-comunica-hdt\",  \"resourceConstraints\": {\"@type\": \"StaticDockerResourceConstraints\",\"cpu_percentage\": 100  },  \"configClient\": \"input/comunica-hdt-config.json\",  \"contextClient\": \"input/comunica-hdt-context.json\",  \"additionalBinds\": [\"../../generated/dataset.hdt.index.v1-1:/tmp/dataset.hdt.index.v1-1\", \"../../generated/dataset.hdt:/tmp/dataset.hdt\"],  \"clientPort\": 3001,  \"clientLogLevel\": \"info\",  \"queryTimeout\": 500,  \"maxMemory\": 8192}",
+      "hookSparqlEndpoint": "{\"@id\": \"urn:jbr:watdiv:combination_1:hookSparqlEndpoint\",  \"@type\": \"HookSparqlEndpointComunica\",  \"dockerfileClient\": \"input/dockerfiles/Dockerfile-comunica-hdt\",  \"resourceConstraints\": {\"@type\": \"StaticDockerResourceConstraints\",\"cpu_percentage\": 100  },  \"configClient\": \"input/comunica-hdt-config.json\",  \"contextClient\": \"input/comunica-hdt-context.json\",  \"additionalBinds\": [\"../../generated/dataset.hdt.index.v1-1:/tmp/dataset.hdt.index.v1-1\", \"../../generated/dataset.hdt:/tmp/dataset.hdt\"],  \"clientPort\": 3001,  \"clientLogLevel\": \"info\",  \"queryTimeout\": 500,  \"maxMemory\": 8192,  \"preloadQuery\": true}",
       "endpointUrl": "http://localhost:3001/sparql",
       "endpointUrlExternal": "http://localhost:3001/sparql"
     },

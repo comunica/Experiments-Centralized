@@ -218,6 +218,7 @@ curl -X PUT http://localhost:7201/rest/repositories/experiment -H 'Accept: appli
 curl -X POST \
   --data-binary @/staging/dataset.nt \
   --header 'Content-Type:application/n-triples' \
+  --write-out '\nJBR_INGESTION_TIME_S %{time_total} (HTTP %{http_code})\n' \
   http://localhost:7201/repositories/experiment/statements
 echo ">>> Dataset has been loaded, stopping temporary server"
 kill -TERM $pid
