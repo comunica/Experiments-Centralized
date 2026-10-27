@@ -18,5 +18,5 @@
   "queryRunnerRequestDelay": 0,
   "queryRunnerEndpointAvailabilityCheckTimeout": 1000,
   "queryRunnerUrlParams": {},
-  "hookSparqlEndpoint": {"@id": "urn:jbr:watdiv:combination_0:hookSparqlEndpoint",  "@type": "HookSparqlEndpointComunica",  "dockerfileClient": "input/dockerfiles/Dockerfile-comunica-memory",  "resourceConstraints": {"@type": "StaticDockerResourceConstraints","cpu_percentage": 100  },  "configClient": "input/comunica-memory-config.json",  "contextClient": "input/comunica-memory-context.json",  "additionalBinds": ["../../generated/dataset.nt:/tmp/dataset.nt"],  "clientPort": 3001,  "clientLogLevel": "info",  "queryTimeout": 500,  "maxMemory": 8192}
+  "hookSparqlEndpoint": {"@id": "urn:jbr:watdiv:combination_0:hookSparqlEndpoint",  "@type": "HookSparqlEndpointComunica",  "dockerfileClient": "input/dockerfiles/Dockerfile-comunica-memory",  "resourceConstraints": {"@type": "StaticDockerResourceConstraints","cpu_percentage": 100  },  "configClient": "input/comunica-memory-config.json",  "contextClient": "input/comunica-memory-context.json",  "additionalBinds": ["../../generated/dataset.nt:/tmp/dataset.nt"],  "clientPort": 3001,  "clientLogLevel": "info",  "queryTimeout": 500,  "maxMemory": 8192,  "preloadQuery": true}
 }

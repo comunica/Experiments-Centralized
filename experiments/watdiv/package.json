@@ -2,9 +2,9 @@
   "private": true,
   "name": "watdiv",
   "dependencies": {
-    "@jbr-experiment/watdiv": "^6.2.0",
+    "@jbr-experiment/watdiv": "^6.2.2",
     "@jbr-hook/docker": "^6.2.0",
-    "@jbr-hook/sparql-endpoint-comunica": "^6.2.0",
+    "@jbr-hook/sparql-endpoint-comunica": "^6.2.2",
     "cross-env": "^7.0.3",
     "jbr": "^6.2.0"
   },
