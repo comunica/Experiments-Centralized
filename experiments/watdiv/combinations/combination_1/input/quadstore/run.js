@@ -14,6 +14,7 @@ const DF = new DataFactory();
 function loadDataset() {
     return new Promise(async (resolve, reject) => {
         console.time('import');
+        const ingestionStart = performance.now();
         const store = new Quadstore({
             backend: new ClassicLevel('./store.db'),
             dataFactory: DF,
@@ -23,6 +24,7 @@ function loadDataset() {
         const data = fs.createReadStream(process.argv[2], 'utf-8');
         await store.putStream(data.pipe(new StreamParser({ format: 'application/n-triples' })), { batchSize: 100 });
         console.timeEnd('import');
+        console.log(`JBR_INGESTION_TIME_S ${((performance.now() - ingestionStart) / 1000).toFixed(3)}`);
         resolve(store);
     });
 }
