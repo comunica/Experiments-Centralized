@@ -1,0 +1,24 @@
+{
+  "@context": [
+    "https://linkedsoftwaredependencies.org/bundles/npm/jbr/^6.0.0/components/context.jsonld",
+    "https://linkedsoftwaredependencies.org/bundles/npm/@jbr-experiment/ldbc-snb/^6.0.0/components/context.jsonld",
+    "https://linkedsoftwaredependencies.org/bundles/npm/@jbr-hook/sparql-endpoint-comunica/^6.0.0/components/context.jsonld",
+    "https://linkedsoftwaredependencies.org/bundles/npm/@jbr-hook/docker/^6.0.0/components/context.jsonld"
+  ],
+  "@id": "urn:jbr:ldbc-snb:combination_1",
+  "@type": "ExperimentLdbcSnb",
+  "scale": "0.1",
+  "hadoopMemory": "4G",
+  "queryCount": 5,
+  "querySeed": 12345,
+  "generateHdt": true,
+  "endpointUrl": "http://localhost:3001/sparql",
+  "endpointUrlExternal": "http://localhost:3001/sparql",
+  "queryRunnerReplication": 3,
+  "queryRunnerWarmupRounds": 1,
+  "queryRunnerRequestDelay": 0,
+  "queryRunnerEndpointAvailabilityCheckTimeout": 1000,
+  "queryRunnerUrlParams": {},
+  "queryTimeoutFallback": 300000,
+  "hookSparqlEndpoint": {"@id": "urn:jbr:ldbc-snb:combination_1:hookSparqlEndpoint",  "@type": "HookSparqlEndpointComunica",  "dockerfileClient": "input/dockerfiles/Dockerfile-comunica-hdt",  "resourceConstraints": {"@type": "StaticDockerResourceConstraints","cpu_percentage": 100  },  "configClient": "input/comunica-hdt-config.json",  "contextClient": "input/comunica-hdt-context.json",  "additionalBinds": ["../../generated/dataset.hdt.index.v1-1:/tmp/dataset.hdt.index.v1-1", "../../generated/dataset.hdt:/tmp/dataset.hdt"],  "clientPort": 3001,  "clientLogLevel": "info",  "queryTimeout": 500,  "maxMemory": 8192,  "preloadQuery": true}
+}

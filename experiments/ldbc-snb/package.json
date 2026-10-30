@@ -1,0 +1,19 @@
+{
+  "private": true,
+  "name": "ldbc-snb",
+  "dependencies": {
+    "@jbr-experiment/ldbc-snb": "^6.2.2",
+    "@jbr-hook/docker": "^6.2.0",
+    "@jbr-hook/sparql-endpoint-comunica": "^6.2.2",
+    "cross-env": "^7.0.3",
+    "jbr": "^6.2.0"
+  },
+  "scripts": {
+    "jbr": "cross-env NODE_OPTIONS=--max-old-space-size=8192 jbr",
+    "validate": "jbr validate",
+    "plot": "npm run plot-short && npm run plot-complex && npm run plot-load",
+    "plot-short": "psbr tex query combinations/combination_*/output -n 'plot_short' -q '^interactive-short' --svg --overrideCombinationLabels Comunica-Memory,Comunica-HDT,Oxigraph-Rust,Oxigraph-JS,Oxigraph-JS-RDFJS,Jena,Blazegraph,Virtuoso,GraphDB,QLever",
+    "plot-complex": "psbr tex query combinations/combination_*/output -n 'plot_complex' -q '^interactive-complex' --svg --overrideCombinationLabels Comunica-Memory,Comunica-HDT,Oxigraph-Rust,Oxigraph-JS,Oxigraph-JS-RDFJS,Jena,Blazegraph,Virtuoso,GraphDB,QLever",
+    "plot-load": "node ../../scripts/load-times.js ."
+  }
+}

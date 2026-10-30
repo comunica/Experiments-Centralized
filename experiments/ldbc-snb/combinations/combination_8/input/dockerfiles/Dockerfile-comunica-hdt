@@ -1,0 +1,27 @@
+# Dev build of Comunica master (commit 8b461dd), extended with the HDT actor from comunica-feature-hdt.
+# The dev image resolves @comunica packages from a build-time registry, so we point that scope back to npm.
+# Already installed (master) @comunica packages are kept, so only the HDT-specific packages are added.
+# When bumping, match the versioned config import in comunica-hdt-config.json to config/config-default.json in this image.
+FROM comunica/query-sparql-file:dev@sha256:803182359b8824f357a27be6b7683eeddcdb4557dc3f4935c55e2de0bf81cf56
+
+RUN npm config set @comunica:registry https://registry.npmjs.org/ && \
+    npm install --no-save --omit=dev @comunica/actor-query-source-identify-hdt@5.0.1 @comunica/config-query-sparql-hdt@5.0.1 && \
+    test -f node_modules/hdt/build/Release/hdt.node
+
+ARG CONFIG_CLIENT
+ARG QUERY_TIMEOUT
+ARG MAX_MEMORY
+ARG LOG_LEVEL
+
+ADD $CONFIG_CLIENT /tmp/config.json
+
+ENV COMUNICA_CONFIG=/tmp/config.json
+ENV NODE_ENV=production
+ENV MAX_MEMORY=$MAX_MEMORY
+ENV QUERY_TIMEOUT=$QUERY_TIMEOUT
+ENV LOG_LEVEL=$LOG_LEVEL
+
+EXPOSE 3000
+
+ENTRYPOINT []
+CMD [ "/bin/sh", "-c", "node --max-old-space-size=$MAX_MEMORY --max-semi-space-size=256 ./bin/http.js -c /tmp/context.json -p 3000 -t $QUERY_TIMEOUT -l $LOG_LEVEL" ]
