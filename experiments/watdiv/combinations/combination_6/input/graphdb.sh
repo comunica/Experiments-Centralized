@@ -26,7 +26,7 @@ curl -X PUT http://localhost:7201/rest/repositories/experiment -H 'Accept: appli
             "queryTimeout":{
                 "name":"queryTimeout",
                 "label":"Query timeout (seconds)",
-                "value":"0"
+                "value":"300"
             },
             "cacheSelectNodes":{
                 "name":"cacheSelectNodes",
@@ -96,7 +96,7 @@ curl -X PUT http://localhost:7201/rest/repositories/experiment -H 'Accept: appli
             "throwQueryEvaluationExceptionOnTimeout":{
                 "name":"throwQueryEvaluationExceptionOnTimeout",
                 "label":"Throw exception on query timeout",
-                "value":"false"
+                "value":"true"
             },
             "member":{
                 "name":"member",
