@@ -1,0 +1,58 @@
+{
+  "@context": [
+    "https://linkedsoftwaredependencies.org/bundles/npm/jbr/^6.0.0/components/context.jsonld"
+  ],
+  "@id": "urn:jbr:ldbc-snb-combinations",
+  "@type": "FractionalCombinationProvider",
+  "commonGenerated": true,
+  "combinations": [
+    {
+      "name": "comunica-memory",
+      "hookSparqlEndpoint": "{\"@id\": \"urn:jbr:ldbc-snb:combination_0:hookSparqlEndpoint\",  \"@type\": \"HookSparqlEndpointComunica\",  \"dockerfileClient\": \"input/dockerfiles/Dockerfile-comunica-memory\",  \"resourceConstraints\": {\"@type\": \"StaticDockerResourceConstraints\",\"cpu_percentage\": 100  },  \"configClient\": \"input/comunica-memory-config.json\",  \"contextClient\": \"input/comunica-memory-context.json\",  \"additionalBinds\": [\"../../generated/dataset.nt:/tmp/dataset.nt\"],  \"clientPort\": 3001,  \"clientLogLevel\": \"info\",  \"queryTimeout\": 500,  \"maxMemory\": 8192,  \"preloadQuery\": true}",
+      "endpointUrl": "http://localhost:3001/sparql",
+      "endpointUrlExternal": "http://localhost:3001/sparql"
+    },
+    {
+      "name": "comunica-hdt",
+      "hookSparqlEndpoint": "{\"@id\": \"urn:jbr:ldbc-snb:combination_1:hookSparqlEndpoint\",  \"@type\": \"HookSparqlEndpointComunica\",  \"dockerfileClient\": \"input/dockerfiles/Dockerfile-comunica-hdt\",  \"resourceConstraints\": {\"@type\": \"StaticDockerResourceConstraints\",\"cpu_percentage\": 100  },  \"configClient\": \"input/comunica-hdt-config.json\",  \"contextClient\": \"input/comunica-hdt-context.json\",  \"additionalBinds\": [\"../../generated/dataset.hdt.index.v1-1:/tmp/dataset.hdt.index.v1-1\", \"../../generated/dataset.hdt:/tmp/dataset.hdt\"],  \"clientPort\": 3001,  \"clientLogLevel\": \"info\",  \"queryTimeout\": 500,  \"maxMemory\": 8192,  \"preloadQuery\": true}",
+      "endpointUrl": "http://localhost:3001/sparql",
+      "endpointUrlExternal": "http://localhost:3001/sparql"
+    },
+    {
+      "name": "oxigraph",
+      "hookSparqlEndpoint": "{\"@id\": \"urn:jbr:ldbc-snb:combination_2:hookSparqlEndpoint\",  \"@type\": \"HookDocker\",  \"dockerfile\": \"input/dockerfiles/Dockerfile-oxigraph\",  \"resourceConstraints\": {\"@type\": \"StaticDockerResourceConstraints\",\"cpu_percentage\": 100  },  \"additionalBinds\": [\"../../generated/dataset.nt:/tmp/dataset.nt\"],  \"additionalFilesPrepare\": [],  \"innerPort\": 3000,  \"outerPort\": 3001}",
+      "endpointUrl": "http://localhost:3001/query",
+      "endpointUrlExternal": "http://localhost:3001/"
+    },
+    {
+      "name": "jena",
+      "hookSparqlEndpoint": "{\"@id\": \"urn:jbr:ldbc-snb:combination_3:hookSparqlEndpoint\",  \"@type\": \"HookDocker\",  \"dockerfile\": \"input/dockerfiles/Dockerfile-jena\",  \"resourceConstraints\": {\"@type\": \"StaticDockerResourceConstraints\",\"cpu_percentage\": 100  },  \"additionalBinds\": [\"../../generated/dataset.nt:/staging/dataset.nt\", \"input/jena.sh:/jena-fuseki/jbr-init.sh\"],  \"additionalFilesPrepare\": [],  \"innerPort\": 3000,  \"outerPort\": 3001}",
+      "endpointUrl": "http://localhost:3001/mydataset/query",
+      "endpointUrlExternal": "http://localhost:3001/"
+    },
+    {
+      "name": "blazegraph",
+      "hookSparqlEndpoint": "{\"@id\": \"urn:jbr:ldbc-snb:combination_4:hookSparqlEndpoint\",  \"@type\": \"HookDocker\",  \"dockerfile\": \"input/dockerfiles/Dockerfile-blazegraph\",  \"resourceConstraints\": {\"@type\": \"StaticDockerResourceConstraints\",\"cpu_percentage\": 100  },  \"additionalBinds\": [\"../../generated/dataset.nt:/staging/dataset.nt\", \"input/blazegraph.sh:/var/lib/jetty/jbr-init.sh\"],  \"additionalFilesPrepare\": [],  \"innerPort\": 8080,  \"outerPort\": 3001}",
+      "endpointUrl": "http://localhost:3001/bigdata/sparql",
+      "endpointUrlExternal": "http://localhost:3001/bigdata/"
+    },
+    {
+      "name": "virtuoso",
+      "hookSparqlEndpoint": "{\"@id\": \"urn:jbr:ldbc-snb:combination_5:hookSparqlEndpoint\",  \"@type\": \"HookDocker\",  \"dockerfile\": \"input/dockerfiles/Dockerfile-virtuoso\",  \"resourceConstraints\": {\"@type\": \"StaticDockerResourceConstraints\",\"cpu_percentage\": 100  },  \"additionalBinds\": [\"../../generated/dataset.nt:/staging/dataset.nt\", \"input/virtuoso.sh:/jbr-init.sh\"],  \"additionalFilesPrepare\": [],  \"innerPort\": 8891,  \"outerPort\": 3001}",
+      "endpointUrl": "http://localhost:3001/sparql?graph-uri=urn:default-graph",
+      "endpointUrlExternal": "http://localhost:3001/"
+    },
+    {
+      "name": "graphdb",
+      "hookSparqlEndpoint": "{\"@id\": \"urn:jbr:ldbc-snb:combination_6:hookSparqlEndpoint\",  \"@type\": \"HookDocker\",  \"dockerfile\": \"input/dockerfiles/Dockerfile-graphdb\",  \"resourceConstraints\": {\"@type\": \"StaticDockerResourceConstraints\",\"cpu_percentage\": 100  },  \"additionalBinds\": [\"../../generated/dataset.nt:/staging/dataset.nt\", \"input/graphdb.sh:/jbr-init.sh\"],  \"additionalFilesPrepare\": [],  \"innerPort\": 7200,  \"outerPort\": 3001}",
+      "endpointUrl": "http://localhost:3001/repositories/experiment",
+      "endpointUrlExternal": "http://localhost:3001/rest/repositories"
+    },
+    {
+      "name": "qlever",
+      "hookSparqlEndpoint": "{\"@id\": \"urn:jbr:ldbc-snb:combination_7:hookSparqlEndpoint\",  \"@type\": \"HookDocker\",  \"dockerfile\": \"input/dockerfiles/Dockerfile-qlever\",  \"resourceConstraints\": {\"@type\": \"StaticDockerResourceConstraints\",\"cpu_percentage\": 100  },  \"additionalBinds\": [\"../../generated/dataset.nt:/staging/dataset.nt\", \"input/qlever.sh:/jbr-init.sh\", \"input/Qleverfile:/qlever/Qleverfile\"],  \"additionalFilesPrepare\": [],  \"innerPort\": 7015,  \"outerPort\": 3001}",
+      "endpointUrl": "http://localhost:3001/",
+      "endpointUrlExternal": "http://localhost:3001/ping"
+    }
+  ]
+}

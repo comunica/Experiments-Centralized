@@ -1,0 +1,28 @@
+# No maintained official image exists for recent Jena versions, so we build one from the Apache release.
+FROM eclipse-temurin:21-jre-noble
+
+ARG FUSEKI_VERSION=6.2.0
+ARG FUSEKI_SHA512=ba65f5867d2d4741b2ed9e2af5a0d4fbb447909894ab2a0c6bc4dac8997f4fe339c87b13c48d45d054977769f0f8bf763ea346b1f7792d5cdc458041bd43a132
+
+ENV FUSEKI_HOME=/jena-fuseki
+ENV FUSEKI_BASE=/fuseki
+
+RUN apt-get -y update; apt-get -y install curl
+RUN curl -fsSL -o /tmp/fuseki.tar.gz https://archive.apache.org/dist/jena/binaries/apache-jena-fuseki-$FUSEKI_VERSION.tar.gz && \
+    echo "$FUSEKI_SHA512  /tmp/fuseki.tar.gz" | sha512sum -c - && \
+    tar xzf /tmp/fuseki.tar.gz -C / && \
+    mv /apache-jena-fuseki-$FUSEKI_VERSION $FUSEKI_HOME && \
+    rm /tmp/fuseki.tar.gz && \
+    mkdir -p $FUSEKI_BASE/databases
+
+# Equivalent of the tdbloader2 script in stain/jena-fuseki
+RUN printf '#!/bin/sh\nJVM_ARGS=${JVM_ARGS:--Xmx1200M}\nexec java $JVM_ARGS -cp $FUSEKI_HOME/fuseki-server.jar tdb2.tdbloader "$@"\n' > $FUSEKI_HOME/tdbloader2 && \
+    chmod +x $FUSEKI_HOME/tdbloader2
+
+WORKDIR $FUSEKI_HOME
+
+ENTRYPOINT []
+EXPOSE 3000
+
+USER root
+CMD chmod +x /jena-fuseki/jbr-init.sh && /jena-fuseki/jbr-init.sh
