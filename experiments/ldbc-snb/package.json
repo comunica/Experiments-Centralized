@@ -12,8 +12,8 @@
     "jbr": "cross-env NODE_OPTIONS=--max-old-space-size=8192 jbr",
     "validate": "jbr validate",
     "plot": "npm run plot-short && npm run plot-complex && npm run plot-load",
-    "plot-short": "psbr tex query combinations/combination_*/output -n 'plot_short' -q '^interactive-short' --svg --overrideCombinationLabels Comunica-Memory,Comunica-HDT,Oxigraph-Rust,Oxigraph-JS,Oxigraph-JS-RDFJS,Jena,Blazegraph,Virtuoso,GraphDB,QLever",
-    "plot-complex": "psbr tex query combinations/combination_*/output -n 'plot_complex' -q '^interactive-complex' --svg --overrideCombinationLabels Comunica-Memory,Comunica-HDT,Oxigraph-Rust,Oxigraph-JS,Oxigraph-JS-RDFJS,Jena,Blazegraph,Virtuoso,GraphDB,QLever",
+    "plot-short": "psbr tex query combinations/combination_*/output -n 'plot_short' -q '^interactive-short' --svg --overrideCombinationLabels Comunica-Memory,Comunica-HDT,Oxigraph-Rust,Jena,Blazegraph,Virtuoso,GraphDB,QLever",
+    "plot-complex": "psbr tex query combinations/combination_*/output -n 'plot_complex' -q '^interactive-complex' --svg --overrideCombinationLabels Comunica-Memory,Comunica-HDT,Oxigraph-Rust,Jena,Blazegraph,Virtuoso,GraphDB,QLever",
     "plot-load": "node ../../scripts/load-times.js ."
   }
 }
