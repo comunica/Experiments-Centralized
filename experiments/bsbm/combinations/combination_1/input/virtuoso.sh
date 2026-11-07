@@ -32,6 +32,8 @@ kill -TERM $pid
 
 # Modify virtuoso port to final one, and default settings to ensure correct results
 sed -i "s/8890/8891/g" /database/virtuoso.ini
+# Since Virtuoso 7.2.17, HTTPS listens on 8891 by default, which conflicts with HTTP and makes the server busy-loop
+sed -i "s/^SSLPort\(\s*\)= 8891/SSLPort\1= 8892/" /database/virtuoso.ini
 sed -i "s/ResultSetMaxRows           = 10000/ResultSetMaxRows           = 10000000/g" /database/virtuoso.ini
 sed -i "s/MaxConstructTriples        = 10000/MaxConstructTriples        = 10000000/g" /database/virtuoso.ini
 sed -i "s/MaxQueryExecutionTime      = 60/MaxQueryExecutionTime      = 600000/g" /database/virtuoso.ini
