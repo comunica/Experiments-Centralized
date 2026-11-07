@@ -31,11 +31,24 @@ function loadDataset() {
 
         console.time('import');
         const ingestionStart = performance.now();
-        const data = fs.readFileSync(process.argv[2], 'utf-8');
-        store.load(data, { format: 'application/n-triples' });
-        console.timeEnd('import');
-        console.log(`JBR_INGESTION_TIME_S ${((performance.now() - ingestionStart) / 1000).toFixed(3)}`);
-        resolve();
+        // Load in chunks of whole lines, as a single string cannot hold datasets larger than about 512MB
+        const input = fs.createReadStream(process.argv[2], { encoding: 'utf-8', highWaterMark: 64 * 1024 * 1024 });
+        let remainder = '';
+        input.on('data', (chunk) => {
+            const data = remainder + chunk;
+            const end = data.lastIndexOf('\n') + 1;
+            store.load(data.slice(0, end), { format: 'application/n-triples' });
+            remainder = data.slice(end);
+        });
+        input.on('error', reject);
+        input.on('end', () => {
+            if (remainder) {
+                store.load(remainder, { format: 'application/n-triples' });
+            }
+            console.timeEnd('import');
+            console.log(`JBR_INGESTION_TIME_S ${((performance.now() - ingestionStart) / 1000).toFixed(3)}`);
+            resolve();
+        });
     });
 }
 
