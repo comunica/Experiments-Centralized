@@ -2,7 +2,7 @@
   "private": true,
   "name": "ldbc-snb",
   "dependencies": {
-    "@jbr-experiment/ldbc-snb": "^6.2.2",
+    "@jbr-experiment/ldbc-snb": "^6.4.0",
     "@jbr-hook/docker": "^6.2.0",
     "@jbr-hook/sparql-endpoint-comunica": "^6.2.2",
     "cross-env": "^7.0.3",
