@@ -13,8 +13,10 @@ ENV NODE_ENV=production
 ENV MAX_MEMORY=$MAX_MEMORY
 ENV QUERY_TIMEOUT=$QUERY_TIMEOUT
 ENV LOG_LEVEL=$LOG_LEVEL
+# Generic query executions per worker before it accepts requests, to warm up the JIT compiler
+ENV WARMUP=2000
 
 EXPOSE 3000
 
 ENTRYPOINT []
-CMD [ "/bin/sh", "-c", "node --max-old-space-size=$MAX_MEMORY --max-semi-space-size=256 ./bin/http.js -c /tmp/context.json -p 3000 -t $QUERY_TIMEOUT -l $LOG_LEVEL" ]
+CMD [ "/bin/sh", "-c", "node --max-old-space-size=$MAX_MEMORY --max-semi-space-size=256 ./bin/http.js -c /tmp/context.json -p 3000 -t $QUERY_TIMEOUT -l $LOG_LEVEL --warmup $WARMUP" ]
