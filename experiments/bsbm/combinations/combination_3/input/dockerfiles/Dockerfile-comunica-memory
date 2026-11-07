@@ -1,5 +1,5 @@
 # When bumping, match the versioned config import in comunica-memory-config.json to config/config-default.json in this image.
-FROM comunica/query-sparql-file:dev@sha256:803182359b8824f357a27be6b7683eeddcdb4557dc3f4935c55e2de0bf81cf56
+FROM comunica/query-sparql-file:dev@sha256:ffad9ac85899079fe8a91be03b48ad0b0688d0e023c0401d0c6c3e286f57a1c3
 
 ARG CONFIG_CLIENT
 ARG QUERY_TIMEOUT
