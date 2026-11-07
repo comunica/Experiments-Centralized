@@ -11,7 +11,7 @@
   "queryCount": 5,
   "queryRecurrence": 1,
   "generateHdt": true,
-  "endpointUrl": "http://localhost:3001/bigdata/sparql",
+  "endpointUrl": "http://localhost:3001/bigdata/sparql?maxQueryTimeMillis=300000",
   "endpointUrlExternal": "http://localhost:3001/bigdata/",
   "queryRunnerReplication": 3,
   "queryRunnerWarmupRounds": 1,

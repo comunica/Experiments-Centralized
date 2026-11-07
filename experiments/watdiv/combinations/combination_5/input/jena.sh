@@ -7,4 +7,4 @@ ingestion_time=$(( $(date +%s%3N) - ingestion_start ))
 echo "JBR_INGESTION_TIME_S $(( ingestion_time / 1000 )).$(printf %03d $(( ingestion_time % 1000 )))"
 
 # Start server on port 3030
-./fuseki-server --tdb2 --port 3000 --loc=$FUSEKI_BASE/databases/mydataset /mydataset
+./fuseki-server --tdb2 --timeout=300000 --port 3000 --loc=$FUSEKI_BASE/databases/mydataset /mydataset
