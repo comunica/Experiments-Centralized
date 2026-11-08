@@ -27,6 +27,7 @@ checkpoint;
 EOF
 ingestion_time=$(( $(date +%s%3N) - ingestion_start ))
 echo "JBR_INGESTION_TIME_S $(( ingestion_time / 1000 )).$(printf %03d $(( ingestion_time % 1000 )))"
+echo "JBR_STORE_SIZE_BYTES $(stat -c %s /database/virtuoso.db) disk"
 echo ">>> Dataset has been loaded, stopping temporary server"
 kill -TERM $pid
 

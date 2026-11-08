@@ -8,5 +8,6 @@ EXPOSE 3000
 
 CMD /usr/local/bin/oxigraph serve --location /data --bind 0.0.0.0:4000 & \
     sleep 1 && curl -v --write-out '\nJBR_INGESTION_TIME_S %{time_total} (HTTP %{http_code})\n' -X POST -T "/tmp/dataset.nt" -H "content-type: application/n-triples" "http://127.0.0.1:4000/store?no_transaction" && \
+    echo "JBR_STORE_SIZE_BYTES $(du -sb /data | cut -f1) disk" && \
     kill $! && rm /data/LOCK && \
     /usr/local/bin/oxigraph serve --location /data --bind 0.0.0.0:3000 --union-default-graph --timeout-s 300

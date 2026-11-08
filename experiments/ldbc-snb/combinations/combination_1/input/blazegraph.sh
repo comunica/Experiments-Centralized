@@ -29,6 +29,8 @@ curl -X POST \
   http://localhost:8000/bigdata/sparql
 echo "Dataset has been loaded, stopping temporary server"
 kill -TERM $pid
+wait $pid
+echo "JBR_STORE_SIZE_BYTES $(stat -c %s bigdata.jnl) disk"
 
 # Start server on actual port
 echo "Starting final server"
