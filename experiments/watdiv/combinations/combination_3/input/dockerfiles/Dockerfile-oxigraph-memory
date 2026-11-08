@@ -1,0 +1,16 @@
+# Oxigraph with its in-memory store: the same server and flags as Dockerfile-oxigraph, without a storage location.
+# The data is loaded over HTTP after the server starts, so a marker triple is added to the named graph urn:jbr:ready
+# after loading: the experiment's readiness check polls that graph, which answers 404 until then.
+FROM debian:bookworm-slim
+
+RUN apt-get -y update; apt-get -y install curl
+COPY --from=ghcr.io/oxigraph/oxigraph:0.5.13 /usr/local/bin/oxigraph /usr/local/bin/oxigraph
+
+ENTRYPOINT []
+EXPOSE 3000
+
+CMD /usr/local/bin/oxigraph serve --bind 0.0.0.0:3000 --union-default-graph --timeout-s 300 & \
+    until curl -s -o /dev/null http://127.0.0.1:3000/; do sleep 0.2; done && \
+    curl -s --write-out '\nJBR_INGESTION_TIME_S %{time_total} (HTTP %{http_code})\n' -X POST -T "/tmp/dataset.nt" -H "content-type: application/n-triples" "http://127.0.0.1:3000/store?no_transaction" && \
+    curl -s -X POST -H "content-type: application/n-triples" --data-binary '<urn:jbr:ready> <urn:jbr:ready> <urn:jbr:ready> .' "http://127.0.0.1:3000/store?graph=urn:jbr:ready" && \
+    wait
