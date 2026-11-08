@@ -1,0 +1,7 @@
+FROM lyrasis/blazegraph:2.1.5
+
+ENTRYPOINT []
+EXPOSE 8080
+
+USER root
+CMD chmod +x /var/lib/jetty/jbr-init.sh && /var/lib/jetty/jbr-init.sh
