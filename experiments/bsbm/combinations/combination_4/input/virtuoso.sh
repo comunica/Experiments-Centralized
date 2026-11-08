@@ -27,7 +27,9 @@ checkpoint;
 EOF
 ingestion_time=$(( $(date +%s%3N) - ingestion_start ))
 echo "JBR_INGESTION_TIME_S $(( ingestion_time / 1000 )).$(printf %03d $(( ingestion_time % 1000 )))"
-echo "JBR_STORE_SIZE_BYTES $(stat -c %s /database/virtuoso.db) disk"
+# The pages in use, as virtuoso.db is preallocated: "File size <bytes>, <pages> pages, <free> free." with 8 KB pages
+pages=$(echo "status();" | /virtuoso-entrypoint.sh isql | sed -n 's/.*File size [0-9]*, \([0-9]*\) pages, \([0-9]*\) free.*/\1 \2/p')
+echo "JBR_STORE_SIZE_BYTES $(( (${pages% *} - ${pages#* }) * 8192 )) disk"
 echo ">>> Dataset has been loaded, stopping temporary server"
 kill -TERM $pid
 

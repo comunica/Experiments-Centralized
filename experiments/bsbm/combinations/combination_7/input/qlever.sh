@@ -7,7 +7,7 @@ ingestion_start=$(date +%s%3N)
 qlever index
 ingestion_time=$(( $(date +%s%3N) - ingestion_start ))
 echo "JBR_INGESTION_TIME_S $(( ingestion_time / 1000 )).$(printf %03d $(( ingestion_time % 1000 )))"
-echo "JBR_STORE_SIZE_BYTES $(du -cb experiment.* | tail -1 | cut -f1) disk"
+echo "JBR_STORE_SIZE_BYTES $(( $(du -ck experiment.* | tail -1 | cut -f1) * 1024 )) disk"
 
 # Start server on actual port
 echo ">>> Starting final server"
