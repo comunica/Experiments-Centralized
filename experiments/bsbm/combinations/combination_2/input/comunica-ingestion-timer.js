@@ -18,11 +18,13 @@ let reported = false;
 v8.setFlagsFromString('--expose-gc');
 const gc = vm.runInNewContext('gc');
 
-// The live memory, after collecting twice with a pause in between, as V8 releases array buffer memory asynchronously
+// The live memory, after collecting three times with pauses in between, as V8 releases array buffer memory
+// asynchronously: after a bulk load, two collections still leave tens of MiB of released buffers counted.
 async function liveMemory() {
-  gc();
-  await new Promise(resolve => setTimeout(resolve, 500));
-  gc();
+  for (let i = 0; i < 3; i++) {
+    gc();
+    await new Promise(resolve => setTimeout(resolve, 400));
+  }
   const { heapUsed, external } = process.memoryUsage();
   return heapUsed + external;
 }
