@@ -18,9 +18,10 @@ ENV MAX_MEMORY=$MAX_MEMORY
 ENV QUERY_TIMEOUT=$QUERY_TIMEOUT
 ENV LOG_LEVEL=$LOG_LEVEL
 # Generic query executions per worker before it accepts requests, to warm up the JIT compiler
+# (the dataset is loaded during this warm-up; comunica-ingestion-timer.js reports how long that loading takes)
 ENV WARMUP=2000
 
 EXPOSE 3000
 
 ENTRYPOINT []
-CMD [ "/bin/sh", "-c", "node --max-old-space-size=$MAX_MEMORY --max-semi-space-size=256 ./bin/http.js -c /tmp/context.json -p 3000 -t $QUERY_TIMEOUT -l $LOG_LEVEL --warmup $WARMUP" ]
+CMD [ "/bin/sh", "-c", "node --max-old-space-size=$MAX_MEMORY --max-semi-space-size=256 $([ -f /tmp/comunica-ingestion-timer.js ] && echo --require /tmp/comunica-ingestion-timer.js) ./bin/http.js -c /tmp/context.json -p 3000 -t $QUERY_TIMEOUT -l $LOG_LEVEL --warmup $WARMUP" ]
