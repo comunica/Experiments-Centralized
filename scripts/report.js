@@ -143,7 +143,7 @@ function readLoadTimes(logsDir) {
   if (fs.existsSync(loadTime)) {
     result.startup = Number(readLines(loadTime)[1]) / 1000;
   }
-  // Comunica loads its data while starting (before its warm-up), so only engines that report ingestion get one.
+  // Engines report ingestion with this marker in their logs; for Comunica, input/comunica-ingestion-timer.js prints it.
   for (const file of fs.readdirSync(logsDir).filter(f => f.endsWith('.txt')).sort()) {
     const match = INGESTION_MARKER.exec(fs.readFileSync(path.join(logsDir, file), 'utf8'));
     if (match) {
@@ -337,7 +337,7 @@ const TEMPLATE = `<!doctype html>
       <dt>Failed</dt>
       <dd>Queries that returned an error or timed out (BSBM: timeouts reported by its driver).</dd>
       <dt>Startup and ingestion</dt>
-      <dd>Startup is the time from starting an endpoint until it answers, including loading the data. Ingestion is the loading time an engine reports itself; Comunica loads its data during startup.</dd>
+      <dd>Startup is the time from starting an endpoint until it answers, including loading the data. Ingestion is the time an engine reports for loading the data itself, without its startup or warm-up (for Comunica, from opening the dataset until it can be queried).</dd>
       <dt>Scaling</dt>
       <dd>When an experiment has runs at several scales, the scaling chart shows each engine's ratio to the reference per scale. The templates every engine answered can differ per scale.</dd>
     </dl>
