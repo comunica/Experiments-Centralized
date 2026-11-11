@@ -1,5 +1,5 @@
 # Adds the HDT actor to the Comunica master dev image, installing it from npm instead of the image's build-time registry
-FROM comunica/query-sparql-file:dev@sha256:ffad9ac85899079fe8a91be03b48ad0b0688d0e023c0401d0c6c3e286f57a1c3
+FROM comunica/query-sparql-file:dev@sha256:7a2072120af35c09bf142cb015cb372feefc7fb38497d22d53f8d4b84b469061
 
 RUN npm config set @comunica:registry https://registry.npmjs.org/ && \
     npm install --no-save --omit=dev @comunica/actor-query-source-identify-hdt@5.0.1 @comunica/config-query-sparql-hdt@5.0.1 && \
