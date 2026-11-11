@@ -6,12 +6,15 @@
 // Per combination, it reads:
 // - output/logs/load-time.csv: time (ms) from starting the endpoint until it is available (written by jbr).
 // - Ingestion time (s), from the first source that exists:
-//   - output/logs/sparql-endpoint-comunica-preload-time.csv (ms, written by the Comunica hook if preloadQuery is set).
-//   - A "JBR_INGESTION_TIME_S <seconds>" line in any log file in output/logs (printed by the engine startup scripts).
+//   - A "JBR_INGESTION_TIME_S <seconds>" line in any log file in output/logs (printed by the engine startup scripts,
+//     and for Comunica by input/comunica-ingestion-timer.js, which times only loading the dataset).
+//   - output/logs/sparql-endpoint-comunica-preload-time.csv (ms, written by the Comunica hook if preloadQuery is set),
+//     only if Comunica did not warm up: a warm-up loads the dataset before the preload query, which then measures no loading.
 const fs = require('node:fs');
 const path = require('node:path');
 
 const MARKER = /JBR_INGESTION_TIME_S ([\d.]+)/u;
+const WARMUP = /warmed up with \d+ query executions/u;
 
 function parseArgs(argv) {
   const args = { experimentDir: undefined, labels: undefined, name: 'plot_load_times' };
@@ -38,17 +41,18 @@ function readCsvTime(file) {
 }
 
 function readIngestionTime(logsDir) {
-  const preloadTime = readCsvTime(path.join(logsDir, 'sparql-endpoint-comunica-preload-time.csv'));
-  if (preloadTime !== undefined) {
-    return preloadTime;
-  }
-  for (const file of fs.readdirSync(logsDir).filter(f => f.endsWith('.txt')).sort()) {
+  const logFiles = fs.readdirSync(logsDir).filter(f => f.endsWith('.txt')).sort();
+  for (const file of logFiles) {
     const match = MARKER.exec(fs.readFileSync(path.join(logsDir, file), 'utf8'));
     if (match) {
       return Math.round(Number(match[1]) * 1000);
     }
   }
-  return undefined;
+  const comunicaLog = path.join(logsDir, 'sparql-endpoint-comunica.txt');
+  if (fs.existsSync(comunicaLog) && WARMUP.test(fs.readFileSync(comunicaLog, 'utf8'))) {
+    return undefined;
+  }
+  return readCsvTime(path.join(logsDir, 'sparql-endpoint-comunica-preload-time.csv'));
 }
 
 function collect(experimentDir, labels) {
