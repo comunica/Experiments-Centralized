@@ -222,6 +222,8 @@ curl -X POST \
   http://localhost:7201/repositories/experiment/statements
 echo ">>> Dataset has been loaded, stopping temporary server"
 kill -TERM $pid
+wait $pid
+echo "JBR_STORE_SIZE_BYTES $(( $(du -sk "$(find /opt/graphdb -type d -path '*/repositories/experiment' | head -1)" | cut -f1) * 1024 )) disk"
 
 # Start server on actual port
 echo ">>> Starting final server"
