@@ -11,7 +11,17 @@ These results are discussed on https://comunica.dev/performance/.
 Oxigraph and Jena are also run with an in-memory store, as the combinations `oxigraph-memory` and `jena-memory`, next to their default disk-based stores (`oxigraph` and the TDB2-based `jena`).
 
 * `oxigraph-memory` runs the same server and flags without a storage location. It loads the dataset over HTTP after starting, and then adds a marker triple to the named graph `urn:jbr:ready`, which the readiness check polls. As the server uses `--union-default-graph`, a query pattern that matches any triple also matches this marker; none of the benchmark queries do.
-* `jena-memory` runs Fuseki with an in-memory dataset loaded from the dataset file at startup. It uses an 8 GB heap by default (the TDB2-based `jena` keeps Fuseki's default of 4 GB), which can be changed with `JVM_ARGS` in `jena-memory.sh`. Its ingestion time includes the server startup.
+* `jena-memory` runs Fuseki with an in-memory dataset loaded from the dataset file at startup. Its ingestion time includes the server startup.
+
+The in-memory engines (`comunica-memory`, `oxigraph-memory` and `jena-memory`) can each use up to 100 GB of memory, so that they can hold the largest datasets:
+
+| Engine | Setting |
+|---|---|
+| `comunica-memory` | `maxMemory` of the hook, which sets Node's `--max-old-space-size` (in MB) |
+| `oxigraph-memory` | `memory_limit` of the Docker resource constraints, as Oxigraph has no limit of its own |
+| `jena-memory` | `-Xmx` in `JVM_ARGS` of `jena-memory.sh`, with `-XX:+ExitOnOutOfMemoryError` so that Fuseki stops instead of never answering when the heap runs out |
+
+The disk-based engines keep their own defaults, such as 4 GB for the TDB2-based `jena`.
 
 ## Ingestion time and store size
 
