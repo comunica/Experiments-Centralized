@@ -51,6 +51,3 @@ This is needed because most engines keep evaluating a query after its client dis
 | Virtuoso | none: its timeouts return partial results, but it does stop evaluating once the client disconnects |
 
 Oxigraph JS and Quadstore evaluate queries in-process without timeout support.
-
-In BSBM, the test driver itself gives up on a query after 290 seconds (`queryTimeout` in the experiment), and counts it as a timeout.
-It has to stop before the engines do, as it stops the whole run on a response that an engine cuts off at its own timeout.
