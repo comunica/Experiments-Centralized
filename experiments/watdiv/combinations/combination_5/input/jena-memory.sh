@@ -2,7 +2,8 @@
 
 # Fuseki with an in-memory dataset, loaded from the file before the server accepts requests (instead of a TDB2 database).
 # The heap must hold the whole dataset; override it with JVM_ARGS.
-export JVM_ARGS=${JVM_ARGS:--Xmx8G}
+# Fuseki exits when the heap runs out, instead of never answering.
+export JVM_ARGS=${JVM_ARGS:--Xmx100G -XX:+ExitOnOutOfMemoryError}
 
 # The live heap of the running server in bytes, after a full garbage collection
 live_heap() {
