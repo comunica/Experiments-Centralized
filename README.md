@@ -45,6 +45,25 @@ The store size is what the loaded dataset takes where the engine keeps it, so it
 
 Memory and disk sizes are not directly comparable: on disk, engines can use compression and formats that are slower to read.
 
+## Interactive report
+
+Invoke the following to produce an interactive report of the results:
+
+```bash
+$ node scripts/report.js experiments
+```
+
+To compare dataset scales, save the results of each scale before running the next one:
+
+```bash
+$ node scripts/report.js --save-data results/data-small.json experiments
+# Change the scale in each experiment's jbr-experiment.json.template (datasetScale for WatDiv, productCount for BSBM, scale for LDBC SNB),
+# then regenerate the combinations, the data and the results in each experiment directory:
+#   npm run jbr -- generate-combinations && npm run jbr -- prepare -f && npm run jbr -- run
+$ node scripts/report.js --save-data results/data-large.json experiments
+$ node scripts/report.js --output results/report.html results/data-small.json results/data-large.json
+```
+
 ## Query timeouts
 
 All engines stop evaluating a query after 300 seconds, so that a timed-out query does not keep using the CPU while the next queries are measured.
