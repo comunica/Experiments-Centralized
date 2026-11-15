@@ -13,5 +13,6 @@
   "endpointUrlExternal": "%FACTOR-endpointUrlExternal%",
   "warmupRuns": 5,
   "runs": 10,
+  "queryTimeout": 290000,
   "hookSparqlEndpoint": %FACTOR-hookSparqlEndpoint%
 }

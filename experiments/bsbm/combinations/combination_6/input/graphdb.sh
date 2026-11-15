@@ -215,11 +215,17 @@ curl -X PUT http://localhost:7201/rest/repositories/experiment -H 'Accept: appli
             }
         }
     }'
-curl -X POST \
-  --data-binary @/staging/dataset.nt \
+# Stream the file (-T), as --data-binary @file reads it into memory, which curl 8 refuses above 1 GiB.
+# Exit if loading fails, so that the experiment stops instead of querying an empty store.
+if ! curl -X POST --fail \
+  -T /staging/dataset.nt \
   --header 'Content-Type:application/n-triples' \
   --write-out '\nJBR_INGESTION_TIME_S %{time_total} (HTTP %{http_code})\n' \
-  http://localhost:7201/repositories/experiment/statements
+  http://localhost:7201/repositories/experiment/statements; then
+  echo ">>> Loading the dataset failed"
+  kill -TERM $pid
+  exit 1
+fi
 echo ">>> Dataset has been loaded, stopping temporary server"
 kill -TERM $pid
 wait $pid
