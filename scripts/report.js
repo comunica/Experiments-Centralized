@@ -18,6 +18,7 @@
 // Runs of the same experiment at the same scale from later inputs replace earlier ones.
 const fs = require('node:fs');
 const path = require('node:path');
+const { readIngestionTime, readStoreSize } = require('./load-times.js');
 
 const LABELS = {
   'comunica-memory': 'Comunica-Memory',
@@ -40,7 +41,6 @@ const EXPERIMENTS = {
   ExperimentBsbm: { name: 'BSBM', scale: c => c.productCount, scaleLabel: s => `${Number(s).toLocaleString('en')} products` },
   ExperimentLdbcSnb: { name: 'LDBC SNB', scale: c => c.scale, scaleLabel: s => `SF ${s}` },
 };
-const INGESTION_MARKER = /JBR_INGESTION_TIME_S ([\d.]+)/u;
 // BSBM explore query types with graph results (DESCRIBE, CONSTRUCT), whose sizes differ by engine, so they are not checked.
 const BSBM_GRAPH_QUERIES = new Set([ 'Q9', 'Q12' ]);
 // BSBM only reports an average result count per query type, which stands for all its queries.
@@ -147,8 +147,9 @@ function readBsbm(file) {
   return templates;
 }
 
+// Startup and ingestion times in seconds, and the store size as { bytes, kind }, read as scripts/load-times.js does.
 function readLoadTimes(logsDir) {
-  const result = { startup: null, ingestion: null };
+  const result = { startup: null, ingestion: null, storeSize: null };
   if (!fs.existsSync(logsDir)) {
     return result;
   }
@@ -156,14 +157,11 @@ function readLoadTimes(logsDir) {
   if (fs.existsSync(loadTime)) {
     result.startup = Number(readLines(loadTime)[1]) / 1000;
   }
-  // Engines report ingestion with this marker in their logs; for Comunica, input/comunica-ingestion-timer.js prints it.
-  for (const file of fs.readdirSync(logsDir).filter(f => f.endsWith('.txt')).sort()) {
-    const match = INGESTION_MARKER.exec(fs.readFileSync(path.join(logsDir, file), 'utf8'));
-    if (match) {
-      result.ingestion = Number(match[1]);
-      break;
-    }
+  const ingestion = readIngestionTime(logsDir);
+  if (ingestion !== undefined) {
+    result.ingestion = ingestion / 1000;
   }
+  result.storeSize = readStoreSize(logsDir) ?? null;
   return result;
 }
 

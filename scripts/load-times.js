@@ -133,22 +133,31 @@ function toSvg(rows, value, format, title) {
   return `${parts.join('\n')}\n`;
 }
 
-const args = parseArgs(process.argv.slice(2));
-const rows = collect(args.experimentDir, args.labels);
-if (rows.length === 0) {
-  throw new Error(`No load times found in ${args.experimentDir}, run the experiment first`);
+function main() {
+  const args = parseArgs(process.argv.slice(2));
+  const rows = collect(args.experimentDir, args.labels);
+  if (rows.length === 0) {
+    throw new Error(`No load times found in ${args.experimentDir}, run the experiment first`);
+  }
+  fs.writeFileSync(path.join(args.experimentDir, `${args.name}.csv`), toCsv(rows));
+  fs.writeFileSync(path.join(args.experimentDir, `${args.name}.svg`), toSvg(
+    rows,
+    row => row.ingestionTime === undefined ? undefined : row.ingestionTime / 1000,
+    seconds => `${seconds.toFixed(1)}s`,
+    'Data ingestion time',
+  ));
+  fs.writeFileSync(path.join(args.experimentDir, `${args.name}_store_size.svg`), toSvg(
+    rows,
+    row => row.storeSize === undefined ? undefined : row.storeSize.bytes / 1024 / 1024,
+    (mebibytes, row) => `${mebibytes.toFixed(0)} MiB${row ? ` (${row.storeSize.kind})` : ''}`,
+    'Store size (in memory or on disk)',
+  ));
+  console.log(`Wrote ${args.name}.csv, ${args.name}.svg and ${args.name}_store_size.svg for ${rows.length} combinations`);
 }
-fs.writeFileSync(path.join(args.experimentDir, `${args.name}.csv`), toCsv(rows));
-fs.writeFileSync(path.join(args.experimentDir, `${args.name}.svg`), toSvg(
-  rows,
-  row => row.ingestionTime === undefined ? undefined : row.ingestionTime / 1000,
-  seconds => `${seconds.toFixed(1)}s`,
-  'Data ingestion time',
-));
-fs.writeFileSync(path.join(args.experimentDir, `${args.name}_store_size.svg`), toSvg(
-  rows,
-  row => row.storeSize === undefined ? undefined : row.storeSize.bytes / 1024 / 1024,
-  (mebibytes, row) => `${mebibytes.toFixed(0)} MiB${row ? ` (${row.storeSize.kind})` : ''}`,
-  'Store size (in memory or on disk)',
-));
-console.log(`Wrote ${args.name}.csv, ${args.name}.svg and ${args.name}_store_size.svg for ${rows.length} combinations`);
+
+if (require.main === module) {
+  main();
+}
+
+// Also used by scripts/report.js.
+module.exports = { readIngestionTime, readStoreSize };

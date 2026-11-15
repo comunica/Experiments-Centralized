@@ -54,6 +54,7 @@ $ node scripts/report.js experiments
 ```
 
 The report marks a query's results as invalid when their count differs from the count that most engines returned for that query, and leaves such templates out of the comparisons.
+It also shows each engine's startup and ingestion time and store size, read from the same logs as `scripts/load-times.js` (see [Ingestion time and store size](#ingestion-time-and-store-size)).
 
 To compare dataset scales, save the results of each scale before running the next one:
 

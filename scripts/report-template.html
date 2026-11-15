@@ -68,6 +68,15 @@
   .tip .row span:last-child { text-align: right; }
   .tip .detail { color: var(--bad); padding-left: 1.2rem; }
   .status { display: grid; gap: 0.25rem; font-size: 0.9rem; }
+  .bar-charts { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr)); gap: 1.25rem 2rem; }
+  .bar-chart { display: grid; gap: 0.3rem; align-content: start; font-size: 0.85rem; }
+  .bar-chart h4 { margin: 0 0 0.2rem; font-size: 0.85rem; font-weight: 600; }
+  .bar-chart .group { color: var(--muted); font-size: 0.75rem; margin-top: 0.3rem; }
+  .bar-row { display: grid; grid-template-columns: minmax(0, 9.5rem) minmax(2rem, 1fr) minmax(4.5rem, auto); gap: 0.5rem; align-items: center; font-variant-numeric: tabular-nums; }
+  .bar-row > span:first-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .bar-row > span:last-child { text-align: right; white-space: nowrap; }
+  .bar-track { height: 0.75rem; }
+  .bar-track > span { display: block; height: 100%; min-width: 1px; border-radius: 2px; }
   details summary { cursor: pointer; font-weight: 600; }
   dl { display: grid; grid-template-columns: minmax(9rem, max-content) 1fr; gap: 0.5rem 1rem; margin: 1rem 0 0; max-width: 90ch; }
   dt { font-weight: 600; }
@@ -98,7 +107,9 @@
       <dt>Invalid</dt>
       <dd>Queries whose result count differs from the count that a strict majority of the engines returned for the same query, among the engines that answered it without an error. A template with invalid results counts as not answered, like a failure. Counts are compared rather than the results themselves, as engines write equal values differently. BSBM's driver only reports an average count per query type, so a type is checked as a whole, and its DESCRIBE and CONSTRUCT types (Q9 and Q12) are not checked, as their result sizes differ by engine.</dd>
       <dt>Startup and ingestion</dt>
-      <dd>Startup is the time from starting an endpoint until it answers, including loading the data. Ingestion is the time an engine reports for loading the data itself, without its startup or warm-up (for Comunica, from opening the dataset until it can be queried).</dd>
+      <dd>Startup is the time from starting an endpoint until it answers, including loading the data. Ingestion is the time an engine reports for loading the data itself, without its startup or warm-up (for Comunica, from opening the dataset until it can be queried). Comunica-HDT's HDT file is created before the run, so its ingestion only opens that file.</dd>
+      <dt>Store size</dt>
+      <dd>What the loaded dataset takes where the engine keeps it: in memory for in-memory engines, and on disk (allocated space) for the others. Memory and disk sizes are not directly comparable, as engines can compress on disk and use formats that are slower to read. The repository's README lists how each engine measures it.</dd>
       <dt>Scaling</dt>
       <dd>When an experiment has runs at several scales, the scaling chart shows each engine's ratio to the reference per scale. The templates every engine answered can differ per scale.</dd>
     </dl>
@@ -124,6 +135,8 @@
   const ms = (v) => (v === null || v === undefined || !Number.isFinite(v) ? '' : v < 10 ? nf(2).format(v) : v < 100 ? nf(1).format(v) : nf(0).format(v));
   const ratio = (v) => (v === null || !Number.isFinite(v) ? '' : v < 10 ? nf(2).format(v) : nf(1).format(v)) + (v === null ? '' : '\u00d7');
   const secs = (v) => (v === null || v === undefined ? '' : nf(1).format(v));
+  const bytes = (v) => (v === null || v === undefined ? '' : v >= 2 ** 30 ? nf(1).format(v / 2 ** 30) + ' GiB' : nf(v >= 10 * 2 ** 20 ? 0 : 1).format(v / 2 ** 20) + ' MiB');
+  const where = (size) => (size.kind === 'memory' ? 'in memory' : size.kind === 'disk' ? 'on disk' : size.kind);
   const shortName = (t) => t.replace(/^interactive-complex-(\d+)$/, 'IC$1').replace(/^interactive-short-(\d+)$/, 'IS$1');
   const collator = new Intl.Collator('en', { numeric: true });
   const node = (tag, props = {}, ...children) => {
@@ -167,6 +180,7 @@
         shared: shared.length,
         startup: e.startup,
         ingestion: e.ingestion,
+        storeSize: e.storeSize ?? null,
       };
     });
     return { templates, common, rows, reference };
@@ -236,6 +250,8 @@
     if (run.comunicaImage) facts.push('Comunica image ' + run.comunicaImage.replace(/@sha256:([0-9a-f]{12})[0-9a-f]+/, '@sha256:$1…'));
     head.append(node('p', { class: 'note', text: facts.join(' · ') }));
     section.replaceChildren(head, engineCard(run, analysis), templateCard(run, analysis));
+    const loading = loadingCard(run);
+    if (loading) section.append(loading);
     const scaling = scalingCard(runs);
     if (scaling) section.append(scaling);
   }
@@ -252,6 +268,7 @@
       ['Invalid', (r) => (r.missing ? '' : r.invalid + ' / ' + r.queries), (r) => r.invalid],
       ['Startup (s)', (r) => secs(r.startup), (r) => r.startup],
       ['Ingestion (s)', (r) => secs(r.ingestion), (r) => r.ingestion],
+      ['Store size', (r) => (r.storeSize ? bytes(r.storeSize.bytes) + ' ' + where(r.storeSize) : ''), (r) => (r.storeSize ? r.storeSize.bytes : null)],
     ];
     let sort = { index: null, dir: 1 };
     const table = node('table');
@@ -305,6 +322,42 @@
     requestAnimationFrame(drawChart);
     new ResizeObserver(() => drawChart()).observe(chart);
     return card;
+  }
+
+  // Ingestion time and store size per engine, as bars on a linear scale from zero.
+  function loadingCard(run) {
+    const ingestion = run.engines.filter((e) => e.ingestion !== null && e.ingestion !== undefined);
+    const sized = run.engines.filter((e) => e.storeSize);
+    if (!ingestion.length && !sized.length) return null;
+    const charts = node('div', { class: 'bar-charts' });
+    if (ingestion.length) {
+      charts.append(barChart('Ingestion time', [{ engines: ingestion }], (e) => e.ingestion, (v) => secs(v) + ' s'));
+    }
+    if (sized.length) {
+      const kinds = [...new Set(sized.map((e) => e.storeSize.kind))].sort((a, b) => (b === 'memory') - (a === 'memory') || collator.compare(a, b));
+      charts.append(barChart('Store size', kinds.map((kind) => ({ title: kinds.length > 1 ? where({ kind }).replace(/^./, (c) => c.toUpperCase()) : null, engines: sized.filter((e) => e.storeSize.kind === kind) })),
+        (e) => e.storeSize.bytes, bytes));
+    }
+    return node('div', { class: 'card' },
+      node('h3', { text: 'Loading' }),
+      node('p', { class: 'note', text: 'The time each engine reports for loading the dataset, and how much the loaded dataset takes in memory or on disk. Memory and disk sizes are not directly comparable.' }),
+      charts);
+  }
+
+  function barChart(title, groups, value, format) {
+    const max = Math.max(...groups.flatMap((g) => g.engines.map(value)), 0);
+    const chart = node('div', { class: 'bar-chart' }, node('h4', { text: title }));
+    for (const group of groups) {
+      if (group.title) chart.append(node('div', { class: 'group', text: group.title }));
+      for (const e of group.engines) {
+        const width = max > 0 ? Math.max(0, value(e)) / max * 100 : 0;
+        chart.append(node('div', { class: 'bar-row' },
+          node('span', { text: e.label, title: e.label }),
+          node('div', { class: 'bar-track' }, node('span', { style: 'width:' + width + '%;background:' + colorOf(e) })),
+          node('span', { text: format(value(e)) })));
+      }
+    }
+    return chart;
   }
 
   function logScale(lo, hi, top, bottom) {
