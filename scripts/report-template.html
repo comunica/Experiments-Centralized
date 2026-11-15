@@ -66,6 +66,7 @@
   .tip .head { color: var(--muted); margin-bottom: 2px; }
   .tip .row { display: grid; grid-template-columns: auto 1fr auto; gap: 0.5rem; align-items: center; font-variant-numeric: tabular-nums; }
   .tip .row span:last-child { text-align: right; }
+  .tip .detail { color: var(--bad); padding-left: 1.2rem; }
   .status { display: grid; gap: 0.25rem; font-size: 0.9rem; }
   details summary { cursor: pointer; font-weight: 600; }
   dl { display: grid; grid-template-columns: minmax(9rem, max-content) 1fr; gap: 0.5rem 1rem; margin: 1rem 0 0; max-width: 90ch; }
@@ -89,11 +90,13 @@
       <dt>Template time</dt>
       <dd>For WatDiv and LDBC SNB, the mean over all executions of a template's queries (every query runs several times after a warm-up round). For BSBM, the driver's geometric mean per query type. Whiskers span the fastest and slowest execution.</dd>
       <dt>Geometric mean</dt>
-      <dd>The geometric mean of the template times over the templates that every engine of that run answered without a failure, so all engines are compared on the same templates. Sum of means uses the same templates.</dd>
+      <dd>The geometric mean of the template times over the templates that every engine of that run answered without a failure or an invalid result, so all engines are compared on the same templates. Sum of means uses the same templates.</dd>
       <dt id="reference-term"></dt>
       <dd>The geometric mean of the per-template ratios to the reference engine, over the templates both engines answered (Shared). Below 1 means faster than the reference. This stays meaningful when engines fail on different templates.</dd>
       <dt>Failed</dt>
       <dd>Queries that returned an error or timed out (BSBM: timeouts reported by its driver).</dd>
+      <dt>Invalid</dt>
+      <dd>Queries whose result count differs from the count that a strict majority of the engines returned for the same query, among the engines that answered it without an error. A template with invalid results counts as not answered, like a failure. Counts are compared rather than the results themselves, as engines write equal values differently. BSBM's driver only reports an average count per query type, so a type is checked as a whole, and its DESCRIBE and CONSTRUCT types (Q9 and Q12) are not checked, as their result sizes differ by engine.</dd>
       <dt>Startup and ingestion</dt>
       <dd>Startup is the time from starting an endpoint until it answers, including loading the data. Ingestion is the time an engine reports for loading the data itself, without its startup or warm-up (for Comunica, from opening the dataset until it can be queried).</dd>
       <dt>Scaling</dt>
@@ -141,7 +144,7 @@
 
   // Summary metrics of one run.
   function analyze(run) {
-    const ok = (e, t) => e.templates && e.templates[t] && e.templates[t].mean !== null && e.templates[t].failed === 0;
+    const ok = (e, t) => e.templates && e.templates[t] && e.templates[t].mean !== null && e.templates[t].failed === 0 && !(e.templates[t].invalid > 0);
     const withData = run.engines.filter((e) => e.templates);
     const templates = [...new Set(withData.flatMap((e) => Object.keys(e.templates)))].sort(collator.compare);
     const common = templates.filter((t) => withData.every((e) => ok(e, t)));
@@ -155,6 +158,8 @@
         engine: e,
         answered: templates.filter((t) => ok(e, t)).length,
         failed: all.reduce((s, t) => s + t.failed, 0),
+        invalid: all.reduce((s, t) => s + (t.invalid ?? 0), 0),
+        invalidTemplates: templates.filter((t) => e.templates[t] && e.templates[t].invalid > 0),
         queries: all.reduce((s, t) => s + t.queries, 0),
         geomean: values.length ? Math.exp(values.reduce((s, v) => s + Math.log(v), 0) / values.length) : null,
         sum: values.length ? values.reduce((s, v) => s + v, 0) : null,
@@ -191,7 +196,12 @@
       const text = 'Fastest: ' + ranked[0].engine.label + ', ' + ms(ranked[0].geomean) + ' ms.' +
         (ref > 0 ? ' ' + refLabel + ': rank ' + (ref + 1) + ' of ' + ranked.length + ', ' + ms(ranked[ref].geomean) + ' ms.' : '') +
         ' Geometric mean over ' + common.length + ' templates.';
-      summary.append(node('p', {}, node('b', { text: exp + (run.scaleLabel || run.label ? ', ' + runName(run) : '') + '. ' }), text));
+      const invalid = rows.filter((r) => r.invalid > 0);
+      const p = node('p', {}, node('b', { text: exp + (run.scaleLabel || run.label ? ', ' + runName(run) : '') + '. ' }), text);
+      if (invalid.length) {
+        p.append(' ', node('span', { style: 'color:var(--bad)', text: 'Invalid results: ' + invalid.map((r) => r.engine.label + ' (' + r.invalidTemplates.map(shortName).join(', ') + ')').join(', ') + '.' }));
+      }
+      summary.append(p);
     }
   }
 
@@ -239,6 +249,7 @@
       ['Sum of means (ms)', (r) => ms(r.sum), (r) => r.sum],
       ['Answered', (r) => (r.missing ? '' : r.answered + ' / ' + analysis.templates.length), (r) => r.answered],
       ['Failed', (r) => (r.missing ? '' : r.failed + ' / ' + r.queries), (r) => r.failed],
+      ['Invalid', (r) => (r.missing ? '' : r.invalid + ' / ' + r.queries), (r) => r.invalid],
       ['Startup (s)', (r) => secs(r.startup), (r) => r.startup],
       ['Ingestion (s)', (r) => secs(r.ingestion), (r) => r.ingestion],
     ];
@@ -265,6 +276,7 @@
         columns.forEach(([, fmt], i) => {
           const td = node('td', { text: r.missing && i > 0 ? (i === 1 ? 'no results' : '') : fmt(r) });
           if (i === 0) td.prepend(swatch(r.engine));
+          if (columns[i][0] === 'Invalid' && r.invalid > 0) td.style.color = 'var(--bad)';
           tr.append(td);
         });
         return tr;
@@ -274,7 +286,7 @@
     draw();
     return node('div', { class: 'card' },
       node('h3', { text: 'Engines' }),
-      node('p', { class: 'note', text: 'Geometric mean over the ' + analysis.common.length + ' of ' + analysis.templates.length + ' templates that every engine answered without a failure. Click a column to sort.' }),
+      node('p', { class: 'note', text: 'Geometric mean over the ' + analysis.common.length + ' of ' + analysis.templates.length + ' templates that every engine answered without a failure or an invalid result. Click a column to sort.' }),
       node('div', { class: 'scroll' }, table));
   }
 
@@ -288,7 +300,7 @@
     const drawChart = () => templateChart(chart, engines.filter((e) => !state.hidden.has(e.name)), analysis.templates);
     const card = node('div', { class: 'card' },
       node('h3', { text: 'Per template' }),
-      node('p', { class: 'note', text: 'Template time on a log scale, with whiskers from the fastest to the slowest execution and a red mark where queries failed. Hover or tap a template for its values; click an engine to hide it.' }),
+      node('p', { class: 'note', text: 'Template time on a log scale, with whiskers from the fastest to the slowest execution, a red triangle where queries failed, and a hollow bar with a red \u2260 where results are invalid. Hover or tap a template for its values; click an engine to hide it.' }),
       legend, chart);
     requestAnimationFrame(drawChart);
     new ResizeObserver(() => drawChart()).observe(chart);
@@ -323,6 +335,14 @@
     return Math.ceil(width) + 12;
   }
 
+  // Such as "Query 0: 1,048,576 results, most engines 4,131,378 (and 4 more)".
+  function describeMismatches(mismatches) {
+    const count = (v) => v.toLocaleString('en');
+    const [m] = mismatches;
+    const what = m.query === null ? 'Average ' + count(m.results) + ' results' : 'Query ' + m.query + ': ' + count(m.results) + ' results';
+    return what + ', most engines ' + count(m.expected) + (mismatches.length > 1 ? ' (and ' + (mismatches.length - 1) + ' more)' : '');
+  }
+
   function templateChart(container, engines, templates) {
     container.replaceChildren();
     if (!engines.length) { container.append(node('p', { class: 'note', text: 'No engines selected.' })); return; }
@@ -354,28 +374,42 @@
         if (!r) return;
         const x = x0 + j * barWidth + barWidth * 0.06;
         const w = barWidth * 0.88;
+        const invalid = r.invalid > 0;
         if (r.mean !== null) {
-          svgNode('rect', { x, y: y(r.mean), width: w, height: bottom - y(r.mean), rx: Math.min(2, w / 2), fill: colorOf(e) }, g);
+          // An invalid bar is drawn hollow, so it stays visible without reading as a valid time.
+          const bar = svgNode('rect', { x, y: y(r.mean), width: w, height: bottom - y(r.mean), rx: Math.min(2, w / 2), fill: colorOf(e) }, g);
+          if (invalid) {
+            bar.setAttribute('fill-opacity', 0.25);
+            bar.setAttribute('stroke', colorOf(e));
+            bar.setAttribute('stroke-width', 1.5);
+          }
           if (r.min !== null && r.max !== null && r.max > r.min) {
             svgNode('line', { x1: x + w / 2, x2: x + w / 2, y1: y(r.min), y2: y(r.max), stroke: 'var(--fg)', 'stroke-opacity': 0.45 }, g);
           }
         }
+        let peak = r.mean === null ? top + 6 : y(r.max ?? r.mean) - 4;
         if (r.failed > 0) {
-          const peak = r.mean === null ? top + 6 : y(r.max ?? r.mean) - 4;
           svgNode('path', { d: 'M' + (x + w / 2 - 3.5) + ',' + (peak - 6) + 'L' + (x + w / 2 + 3.5) + ',' + (peak - 6) + 'L' + (x + w / 2) + ',' + peak + 'Z', fill: 'var(--bad)' }, g);
+          peak -= 8;
+        }
+        if (invalid) {
+          const mark = svgNode('text', { x: x + w / 2, y: Math.max(peak, top), 'text-anchor': 'middle', style: 'fill:var(--bad);font-size:15px;font-weight:700' }, g);
+          mark.textContent = '\u2260';
         }
       });
       const label = svgNode('text', { x: left + i * step + step / 2, y: bottom + 18, 'text-anchor': 'middle' }, g);
       label.textContent = shortName(t);
       g.addEventListener('pointerenter', () => {
         hover.setAttribute('opacity', 0.7);
-        tip.replaceChildren(node('div', { class: 'head', text: t }), ...engines.map((e) => {
+        tip.replaceChildren(node('div', { class: 'head', text: t }), ...engines.flatMap((e) => {
           const r = e.templates[t];
           let text = '—';
           if (r) {
-            text = r.mean === null ? r.failed + ' failed' : ms(r.mean) + ' ms' + (r.min !== null && r.max !== null ? ' (' + ms(r.min) + '–' + ms(r.max) + ')' : '') + (r.failed ? ', ' + r.failed + ' failed' : '');
+            text = r.mean === null ? r.failed + ' failed' : ms(r.mean) + ' ms' + (r.min !== null && r.max !== null ? ' (' + ms(r.min) + '–' + ms(r.max) + ')' : '') + (r.failed ? ', ' + r.failed + ' failed' : '') + (r.invalid ? ', ' + r.invalid + ' invalid' : '');
           }
-          return node('div', { class: 'row' }, swatch(e), node('span', { text: e.label }), node('span', { text }));
+          const out = [node('div', { class: 'row' }, swatch(e), node('span', { text: e.label }), node('span', { text }))];
+          if (r && r.mismatches && r.mismatches.length) out.push(node('div', { class: 'detail', text: describeMismatches(r.mismatches) }));
+          return out;
         }));
         tip.hidden = false;
         const tw = tip.offsetWidth;

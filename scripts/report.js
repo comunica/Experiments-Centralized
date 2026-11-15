@@ -41,6 +41,10 @@ const EXPERIMENTS = {
   ExperimentLdbcSnb: { name: 'LDBC SNB', scale: c => c.scale, scaleLabel: s => `SF ${s}` },
 };
 const INGESTION_MARKER = /JBR_INGESTION_TIME_S ([\d.]+)/u;
+// BSBM explore query types with graph results (DESCRIBE, CONSTRUCT), whose sizes differ by engine, so they are not checked.
+const BSBM_GRAPH_QUERIES = new Set([ 'Q9', 'Q12' ]);
+// BSBM only reports an average result count per query type, which stands for all its queries.
+const ALL_QUERIES = '*';
 // The page, in which %TITLE% and %DATA% are replaced.
 const TEMPLATE_FILE = path.join(__dirname, 'report-template.html');
 
@@ -93,12 +97,15 @@ function readQueryTimes(file) {
   const templates = {};
   for (const row of rows) {
     const cells = Object.fromEntries(row.split(';').map((cell, i) => [ columns[i], cell ]));
-    const template = templates[cells.name] ??= { times: [], queries: 0, failed: 0 };
+    const template = templates[cells.name] ??= { times: [], queries: 0, failed: 0, results: {} };
     template.queries++;
     if (cells.error === 'true') {
       template.failed++;
     } else {
       template.times.push(...(cells.times || cells.time || '').split(' ').map(Number).filter(Number.isFinite));
+      if (cells.results) {
+        template.results[cells.id] = Number(cells.results);
+      }
     }
   }
   return Object.fromEntries(Object.entries(templates).map(([ name, t ]) => [ name, {
@@ -108,6 +115,7 @@ function readQueryTimes(file) {
     executions: t.times.length,
     queries: t.queries,
     failed: t.failed,
+    results: t.results,
   } ]));
 }
 
@@ -124,13 +132,16 @@ function readBsbm(file) {
     if (!executions) {
       continue;
     }
-    templates[`Q${nr}`] = {
+    const name = `Q${nr}`;
+    const failed = field('timeoutcount') ?? 0;
+    templates[name] = {
       mean: (field('aqetg') ?? field('aqet')) * 1000,
       min: field('minqet') * 1000,
       max: field('maxqet') * 1000,
       executions,
       queries: executions,
-      failed: field('timeoutcount') ?? 0,
+      failed,
+      results: failed === 0 && !BSBM_GRAPH_QUERIES.has(name) && field('avgresults') !== null ? { [ALL_QUERIES]: field('avgresults') } : {},
     };
   }
   return templates;
@@ -154,6 +165,46 @@ function readLoadTimes(logsDir) {
     }
   }
   return result;
+}
+
+// Marks results whose count differs from a strict majority of the engines that answered the same query without an error.
+// Counts are compared rather than result hashes, as engines serialize equal values differently.
+function checkResults(engines) {
+  const answers = new Map();
+  for (const engine of engines) {
+    for (const [ name, template ] of Object.entries(engine.templates ?? {})) {
+      for (const [ query, count ] of Object.entries(template.results ?? {})) {
+        const key = `${name}\n${query}`;
+        if (!answers.has(key)) {
+          answers.set(key, []);
+        }
+        answers.get(key).push({ template, query, count });
+      }
+      template.mismatches = [];
+    }
+  }
+  for (const group of answers.values()) {
+    const votes = new Map();
+    for (const { count } of group) {
+      votes.set(count, (votes.get(count) ?? 0) + 1);
+    }
+    const [ expected, agreeing ] = [ ...votes ].sort((a, b) => b[1] - a[1])[0];
+    if (agreeing < 2 || agreeing * 2 <= group.length) {
+      continue;
+    }
+    for (const { template, query, count } of group) {
+      if (count !== expected) {
+        template.mismatches.push({ query: query === ALL_QUERIES ? null : query, results: count, expected });
+      }
+    }
+  }
+  for (const engine of engines) {
+    for (const template of Object.values(engine.templates ?? {})) {
+      template.invalid = template.mismatches.reduce((sum, m) => sum + (m.query === null ? template.queries : 1), 0);
+      template.mismatches.sort((a, b) => String(a.query).localeCompare(String(b.query), 'en', { numeric: true }));
+      delete template.results;
+    }
+  }
 }
 
 function comunicaImage(combinationDir) {
@@ -187,6 +238,7 @@ function collectExperiment(dir, label) {
       ...readLoadTimes(path.join(output, 'logs')),
     };
   });
+  checkResults(engines);
   const type = EXPERIMENTS[config['@type']] ?? { name: config['@type'], scale: () => undefined, scaleLabel: () => '' };
   const scale = type.scale(config);
   return {

@@ -53,6 +53,8 @@ Invoke the following to produce an interactive report of the results:
 $ node scripts/report.js experiments
 ```
 
+The report marks a query's results as invalid when their count differs from the count that most engines returned for that query, and leaves such templates out of the comparisons.
+
 To compare dataset scales, save the results of each scale before running the next one:
 
 ```bash
