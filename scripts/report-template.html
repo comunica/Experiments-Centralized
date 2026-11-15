@@ -173,6 +173,7 @@
         failed: all.reduce((s, t) => s + t.failed, 0),
         invalid: all.reduce((s, t) => s + (t.invalid ?? 0), 0),
         invalidTemplates: templates.filter((t) => e.templates[t] && e.templates[t].invalid > 0),
+        failedTemplates: templates.filter((t) => !e.templates[t] || e.templates[t].mean === null || e.templates[t].failed > 0),
         queries: all.reduce((s, t) => s + t.queries, 0),
         geomean: values.length ? Math.exp(values.reduce((s, v) => s + Math.log(v), 0) / values.length) : null,
         sum: values.length ? values.reduce((s, v) => s + v, 0) : null,
@@ -203,18 +204,19 @@
   const summary = document.getElementById('summary');
   for (const exp of experiments) {
     for (const run of runsOf(exp)) {
-      const { rows, common } = analyze(run);
+      const { rows, common, templates } = analyze(run);
       const ranked = rows.filter((r) => !r.missing && r.geomean !== null).sort((a, b) => a.geomean - b.geomean);
       if (!ranked.length) continue;
       const ref = ranked.findIndex((r) => r.engine.name === data.reference);
-      const text = 'Fastest: ' + ranked[0].engine.label + ', ' + ms(ranked[0].geomean) + ' ms.' +
-        (ref > 0 ? ' ' + refLabel + ': rank ' + (ref + 1) + ' of ' + ranked.length + ', ' + ms(ranked[ref].geomean) + ' ms.' : '') +
-        ' Geometric mean over ' + common.length + ' templates.';
-      const invalid = rows.filter((r) => r.invalid > 0);
+      // The ranking only uses the templates every engine answered, so say how many each named engine answered.
+      const coverage = (r) => (r.answered === templates.length ? 'answered all ' : 'answered ' + r.answered + ' of ') + templates.length + ' templates';
+      const text = 'Fastest: ' + ranked[0].engine.label + ', ' + ms(ranked[0].geomean) + ' ms (' + coverage(ranked[0]) + ').' +
+        (ref > 0 ? ' ' + refLabel + ': rank ' + (ref + 1) + ' of ' + ranked.length + ', ' + ms(ranked[ref].geomean) + ' ms (' + coverage(ranked[ref]) + ').' : '') +
+        ' Geometric mean over the ' + common.length + ' templates that every engine answered.';
       const p = node('p', {}, node('b', { text: exp + (run.scaleLabel || run.label ? ', ' + runName(run) : '') + '. ' }), text);
-      if (invalid.length) {
-        p.append(' ', node('span', { style: 'color:var(--bad)', text: 'Invalid results: ' + invalid.map((r) => r.engine.label + ' (' + r.invalidTemplates.map(shortName).join(', ') + ')').join(', ') + '.' }));
-      }
+      const list = (key) => rows.filter((r) => r[key] && r[key].length).map((r) => r.engine.label + ' ' + r[key].map(shortName).join(', ')).join('; ');
+      if (list('failedTemplates')) p.append(' ', node('span', { style: 'color:var(--warn)', text: 'Failed: ' + list('failedTemplates') + '.' }));
+      if (list('invalidTemplates')) p.append(' ', node('span', { style: 'color:var(--bad)', text: 'Invalid results: ' + list('invalidTemplates') + '.' }));
       summary.append(p);
     }
   }
