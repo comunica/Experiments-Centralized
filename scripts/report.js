@@ -19,7 +19,7 @@
 // Runs of the same experiment at the same scale from later inputs replace earlier ones.
 const fs = require('node:fs');
 const path = require('node:path');
-const { readIngestionTime, readStoreSize } = require('./load-times.js');
+const { readCombinationIngestionTime, readStoreSize } = require('./load-times.js');
 
 const LABELS = {
   'comunica-memory': 'Comunica-Memory',
@@ -150,7 +150,8 @@ function readBsbm(file) {
 }
 
 // Startup and ingestion times in seconds, and the store size as { bytes, kind }, read as scripts/load-times.js does.
-function readLoadTimes(logsDir) {
+function readLoadTimes(experimentDir, combination, combinationIndex) {
+  const logsDir = path.join(experimentDir, 'combinations', `combination_${combinationIndex}`, 'output', 'logs');
   const result = { startup: null, ingestion: null, storeSize: null };
   if (!fs.existsSync(logsDir)) {
     return result;
@@ -159,7 +160,7 @@ function readLoadTimes(logsDir) {
   if (fs.existsSync(loadTime)) {
     result.startup = Number(readLines(loadTime)[1]) / 1000;
   }
-  const ingestion = readIngestionTime(logsDir);
+  const ingestion = readCombinationIngestionTime(experimentDir, combination, combinationIndex);
   if (ingestion !== undefined) {
     result.ingestion = ingestion / 1000;
   }
@@ -256,7 +257,7 @@ function collectExperiment(dir, label) {
       label: LABELS[combination.name] ?? combination.name,
       family: VARIANTS[combination.name] ?? combination.name,
       templates: templates ?? null,
-      ...readLoadTimes(path.join(output, 'logs')),
+      ...readLoadTimes(dir, combination, i),
     };
   });
   checkResults(engines);

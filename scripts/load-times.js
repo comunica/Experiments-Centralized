@@ -11,6 +11,10 @@
 //     and for Comunica by input/comunica-ingestion-timer.js, which times only loading the dataset).
 //   - output/logs/sparql-endpoint-comunica-preload-time.csv (ms, written by the Comunica hook if preloadQuery is set),
 //     only if Comunica did not warm up: a warm-up loads the dataset before the preload query, which then measures no loading.
+//   For an engine that queries an HDT file (Dockerfile-comunica-hdt), the time to create the HDT file and its index while
+//   preparing the experiment is added. It is read from when their logs were written: the conversion's log (<experiment>-hdt.txt),
+//   which stays empty, is created when the conversion starts, and the index log (<experiment>-hdt-index.txt) is last written when the
+//   index is done. Without these logs, or when the files were copied without their modification times, the ingestion time is unknown.
 // - Store size: a "JBR_STORE_SIZE_BYTES <bytes> <memory|disk>" line in any log file in output/logs (printed by the engine startup
 //   scripts and input/comunica-ingestion-timer.js): the memory that the loaded dataset takes for in-memory engines, or the size of
 //   the index on disk for the others.
@@ -20,6 +24,7 @@ const path = require('node:path');
 const MARKER = /JBR_INGESTION_TIME_S ([\d.]+)/u;
 const STORE_SIZE_MARKER = /JBR_STORE_SIZE_BYTES (-?\d+) (\w+)/u;
 const WARMUP = /warmed up with \d+ query executions/u;
+const HDT_LOG = /-hdt\.txt$/u;
 
 function parseArgs(argv) {
   const args = { experimentDir: undefined, labels: undefined, name: 'plot_load_times' };
@@ -60,6 +65,59 @@ function readIngestionTime(logsDir) {
   return readCsvTime(path.join(logsDir, 'sparql-endpoint-comunica-preload-time.csv'));
 }
 
+// Whether the engine of a combination (an entry of jbr-combinations.json) queries an HDT file.
+function usesHdt(combination) {
+  return JSON.stringify(combination).includes('Dockerfile-comunica-hdt');
+}
+
+function median(values) {
+  const sorted = [ ...values ].sort((a, b) => a - b);
+  const middle = Math.floor(sorted.length / 2);
+  return sorted.length % 2 === 0 ? (sorted[middle - 1] + sorted[middle]) / 2 : sorted[middle];
+}
+
+// The times (ms) to create HDT files and their indexes, from the logs in a logs directory.
+function readHdtCreationTimes(logsDir) {
+  if (!fs.existsSync(logsDir)) {
+    return [];
+  }
+  const times = [];
+  for (const file of fs.readdirSync(logsDir).filter(f => HDT_LOG.test(f))) {
+    const conversion = fs.statSync(path.join(logsDir, file));
+    const index = path.join(logsDir, file.replace(HDT_LOG, '-hdt-index.txt'));
+    if (conversion.size === 0 && fs.existsSync(index)) {
+      const time = fs.statSync(index).mtimeMs - conversion.mtimeMs;
+      if (time > 0) {
+        times.push(Math.round(time));
+      }
+    }
+  }
+  return times;
+}
+
+// The time (ms) to create the HDT file of an experiment and its index, preferring the logs of the given combination,
+// as it may have prepared its own HDT file, and otherwise the median over the combinations that prepared one.
+function readHdtCreationTime(experimentDir, combinationIndex) {
+  const combinationsDir = path.join(experimentDir, 'combinations');
+  const logsOf = combination => path.join(combinationsDir, combination, 'output', 'logs');
+  const own = readHdtCreationTimes(logsOf(`combination_${combinationIndex}`));
+  if (own.length > 0) {
+    return own[0];
+  }
+  const all = fs.existsSync(combinationsDir) ? fs.readdirSync(combinationsDir).flatMap(c => readHdtCreationTimes(logsOf(c))) : [];
+  return all.length > 0 ? median(all) : undefined;
+}
+
+// The ingestion time (ms) of a combination, which includes creating the HDT file for an engine that queries one.
+function readCombinationIngestionTime(experimentDir, combination, combinationIndex) {
+  const ingestion = readIngestionTime(path.join(experimentDir, 'combinations', `combination_${combinationIndex}`, 'output', 'logs'));
+  if (ingestion === undefined || !usesHdt(combination)) {
+    return ingestion;
+  }
+  const creation = readHdtCreationTime(experimentDir, combinationIndex);
+  return creation === undefined ? undefined : creation + ingestion;
+}
+
 function readStoreSize(logsDir) {
   for (const file of fs.readdirSync(logsDir).filter(f => f.endsWith('.txt')).sort()) {
     const match = STORE_SIZE_MARKER.exec(fs.readFileSync(path.join(logsDir, file), 'utf8'));
@@ -82,7 +140,7 @@ function collect(experimentDir, labels) {
     rows.push({
       label: labels ? labels[i] : combination.name,
       loadTime,
-      ingestionTime: readIngestionTime(logsDir),
+      ingestionTime: readCombinationIngestionTime(experimentDir, combination, i),
       storeSize: readStoreSize(logsDir),
     });
   });
@@ -160,4 +218,4 @@ if (require.main === module) {
 }
 
 // Also used by scripts/report.js.
-module.exports = { readIngestionTime, readStoreSize };
+module.exports = { readCombinationIngestionTime, readStoreSize };
