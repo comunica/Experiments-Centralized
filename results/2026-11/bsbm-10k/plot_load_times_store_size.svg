@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="302" font-family="sans-serif" font-size="12">
+<text x="154" y="24" text-anchor="end">comunica-memory</text>
+<rect x="160" y="10" width="199.5" height="20" fill="#2a6f97"/>
+<text x="363.5" y="24">578 MiB (memory)</text>
+<text x="154" y="52" text-anchor="end">comunica-hdt</text>
+<rect x="160" y="38" width="66.3" height="20" fill="#2a6f97"/>
+<text x="230.3" y="52">192 MiB (disk)</text>
+<text x="154" y="80" text-anchor="end">oxigraph</text>
+<rect x="160" y="66" width="225.4" height="20" fill="#2a6f97"/>
+<text x="389.4" y="80">653 MiB (disk)</text>
+<text x="154" y="108" text-anchor="end">jena</text>
+<rect x="160" y="94" width="243.2" height="20" fill="#2a6f97"/>
+<text x="407.2" y="108">704 MiB (disk)</text>
+<text x="154" y="136" text-anchor="end">blazegraph</text>
+<rect x="160" y="122" width="236.0" height="20" fill="#2a6f97"/>
+<text x="400.0" y="136">683 MiB (disk)</text>
+<text x="154" y="164" text-anchor="end">virtuoso</text>
+<rect x="160" y="150" width="88.0" height="20" fill="#2a6f97"/>
+<text x="252.0" y="164">255 MiB (disk)</text>
+<text x="154" y="192" text-anchor="end">graphdb</text>
+<rect x="160" y="178" width="169.1" height="20" fill="#2a6f97"/>
+<text x="333.1" y="192">490 MiB (disk)</text>
+<text x="154" y="220" text-anchor="end">oxigraph-memory</text>
+<rect x="160" y="206" width="451.3" height="20" fill="#2a6f97"/>
+<text x="615.3" y="220">1307 MiB (memory)</text>
+<text x="154" y="248" text-anchor="end">jena-memory</text>
+<rect x="160" y="234" width="480.0" height="20" fill="#2a6f97"/>
+<text x="644.0" y="248">1390 MiB (memory)</text>
+<line x1="160" y1="266" x2="640" y2="266" stroke="#555"/>
+<text x="160" y="282">0</text>
+<text x="640" y="282" text-anchor="end">1390 MiB</text>
+<text x="400" y="298" text-anchor="middle">Store size (in memory or on disk)</text>
+</svg>
