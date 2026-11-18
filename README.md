@@ -45,6 +45,42 @@ The store size is what the loaded dataset takes where the engine keeps it, so it
 
 Memory and disk sizes are not directly comparable: on disk, engines can use compression and formats that are slower to read.
 
+For `comunica-hdt`, `comunica-ingestion-timer.js` only times opening the HDT file and its index, as both are created in `jbr prepare`.
+The ingestion time that the scripts report therefore adds the time to create them, from when their logs were written:
+`<experiment>-hdt.txt`, which stays empty, is created when the conversion starts, and `<experiment>-hdt-index.txt` is last written when the index is done.
+Without these logs, or when they were copied without their modification times, the ingestion time of `comunica-hdt` is unknown.
+
+## Interactive report
+
+Invoke the following to produce an interactive report of the results:
+
+```bash
+$ node scripts/report.js experiments
+```
+
+The report marks a query's results as invalid when their count differs from the count that most engines returned for that query, and leaves such templates out of the comparisons.
+It also shows each engine's startup and ingestion time and store size, read from the same logs as `scripts/load-times.js` (see [Ingestion time and store size](#ingestion-time-and-store-size)).
+
+To compare dataset scales, save the results of each scale before running the next one:
+
+```bash
+$ node scripts/report.js --save-data results/data-small.json experiments
+# Change the scale in each experiment's jbr-experiment.json.template (datasetScale for WatDiv, productCount for BSBM, scale for LDBC SNB),
+# then regenerate the combinations, the data and the results in each experiment directory:
+#   npm run jbr -- generate-combinations && npm run jbr -- prepare -f && npm run jbr -- run
+$ node scripts/report.js --save-data results/data-large.json experiments
+$ node scripts/report.js --output results/report.html results/data-small.json results/data-large.json
+```
+
+To publish the results, export them as compact JSON without local paths:
+
+```bash
+$ node scripts/report.js --export results/results.json results/data-small.json results/data-large.json
+```
+
+The [Centralized performance](https://comunica.dev/performance/#centralized-performance) section of comunica.dev shows such a file, which is `public/performance-centralized/results.json` in the [website repository](https://github.com/comunica/website).
+The export includes the number of triples of each run when its experiment directory still contains `generated/dataset.nt`.
+
 ## Query timeouts
 
 All engines stop evaluating a query after 300 seconds, so that a timed-out query does not keep using the CPU while the next queries are measured.
