@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="330" font-family="sans-serif" font-size="12">
+<text x="154" y="24" text-anchor="end">comunica-memory</text>
+<rect x="160" y="10" width="111.9" height="20" fill="#2a6f97"/>
+<text x="275.9" y="24">9643 MiB (memory)</text>
+<text x="154" y="52" text-anchor="end">comunica-hdt</text>
+<rect x="160" y="38" width="13.8" height="20" fill="#2a6f97"/>
+<text x="177.8" y="52">1186 MiB (disk)</text>
+<text x="154" y="80" text-anchor="end">oxigraph</text>
+<rect x="160" y="66" width="234.8" height="20" fill="#2a6f97"/>
+<text x="398.8" y="80">20244 MiB (disk)</text>
+<text x="154" y="108" text-anchor="end">jena</text>
+<rect x="160" y="94" width="143.6" height="20" fill="#2a6f97"/>
+<text x="307.6" y="108">12381 MiB (disk)</text>
+<text x="154" y="136" text-anchor="end">blazegraph</text>
+<rect x="160" y="122" width="138.9" height="20" fill="#2a6f97"/>
+<text x="302.9" y="136">11972 MiB (disk)</text>
+<text x="154" y="164" text-anchor="end">virtuoso</text>
+<rect x="160" y="150" width="22.2" height="20" fill="#2a6f97"/>
+<text x="186.2" y="164">1916 MiB (disk)</text>
+<text x="154" y="192" text-anchor="end">graphdb</text>
+<rect x="160" y="178" width="77.0" height="20" fill="#2a6f97"/>
+<text x="241.0" y="192">6637 MiB (disk)</text>
+<text x="154" y="220" text-anchor="end">qlever</text>
+<rect x="160" y="206" width="41.9" height="20" fill="#2a6f97"/>
+<text x="205.9" y="220">3611 MiB (disk)</text>
+<text x="154" y="248" text-anchor="end">oxigraph-memory</text>
+<rect x="160" y="234" width="356.6" height="20" fill="#2a6f97"/>
+<text x="520.6" y="248">30736 MiB (memory)</text>
+<text x="154" y="276" text-anchor="end">jena-memory</text>
+<rect x="160" y="262" width="480.0" height="20" fill="#2a6f97"/>
+<text x="644.0" y="276">41377 MiB (memory)</text>
+<line x1="160" y1="294" x2="640" y2="294" stroke="#555"/>
+<text x="160" y="310">0</text>
+<text x="640" y="310" text-anchor="end">41377 MiB</text>
+<text x="400" y="326" text-anchor="middle">Store size (in memory or on disk)</text>
+</svg>

@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="330" font-family="sans-serif" font-size="12">
+<text x="154" y="24" text-anchor="end">comunica-memory</text>
+<rect x="160" y="10" width="23.4" height="20" fill="#2a6f97"/>
+<text x="187.4" y="24">956.9s</text>
+<text x="154" y="52" text-anchor="end">comunica-hdt</text>
+<rect x="160" y="38" width="55.3" height="20" fill="#2a6f97"/>
+<text x="219.3" y="52">2261.0s</text>
+<text x="154" y="80" text-anchor="end">oxigraph</text>
+<rect x="160" y="66" width="40.9" height="20" fill="#2a6f97"/>
+<text x="204.9" y="80">1671.4s</text>
+<text x="154" y="108" text-anchor="end">jena</text>
+<rect x="160" y="94" width="72.2" height="20" fill="#2a6f97"/>
+<text x="236.2" y="108">2949.5s</text>
+<text x="154" y="136" text-anchor="end">blazegraph</text>
+<rect x="160" y="122" width="480.0" height="20" fill="#2a6f97"/>
+<text x="644.0" y="136">19609.7s</text>
+<text x="154" y="164" text-anchor="end">virtuoso</text>
+<rect x="160" y="150" width="170.3" height="20" fill="#2a6f97"/>
+<text x="334.3" y="164">6955.4s</text>
+<text x="154" y="192" text-anchor="end">graphdb</text>
+<rect x="160" y="178" width="66.4" height="20" fill="#2a6f97"/>
+<text x="230.4" y="192">2712.3s</text>
+<text x="154" y="220" text-anchor="end">qlever</text>
+<rect x="160" y="206" width="137.8" height="20" fill="#2a6f97"/>
+<text x="301.8" y="220">5629.8s</text>
+<text x="154" y="248" text-anchor="end">oxigraph-memory</text>
+<rect x="160" y="234" width="14.1" height="20" fill="#2a6f97"/>
+<text x="178.1" y="248">574.9s</text>
+<text x="154" y="276" text-anchor="end">jena-memory</text>
+<rect x="160" y="262" width="53.7" height="20" fill="#2a6f97"/>
+<text x="217.7" y="276">2194.7s</text>
+<line x1="160" y1="294" x2="640" y2="294" stroke="#555"/>
+<text x="160" y="310">0</text>
+<text x="640" y="310" text-anchor="end">19609.7s</text>
+<text x="400" y="326" text-anchor="middle">Data ingestion time</text>
+</svg>
