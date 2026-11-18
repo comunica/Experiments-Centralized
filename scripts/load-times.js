@@ -172,7 +172,7 @@ function toSvg(rows, value, format, title) {
   const scale = max > 0 ? plotWidth / max : 0;
   const height = top + rows.length * (barHeight + gap) + 40;
   const parts = [
-    `<svg xmlns="http://www.w3.org/2000/svg" width="${labelWidth + plotWidth + 80}" height="${height}" font-family="sans-serif" font-size="12">`,
+    `<svg xmlns="http://www.w3.org/2000/svg" width="${labelWidth + plotWidth + 160}" height="${height}" font-family="sans-serif" font-size="12">`,
   ];
   rows.forEach((row, i) => {
     const y = top + i * (barHeight + gap);
