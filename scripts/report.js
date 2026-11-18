@@ -12,6 +12,7 @@
 // Options:
 //   --output <file>     HTML file to write (default report.html; not written when only --save-data is given)
 //   --save-data <file>  Also write the collected results as JSON, to combine later with other runs
+//   --export <file>     Also write compact results without local paths, to publish them, such as on comunica.dev
 //   --title <text>      Page title (default "Experiment results")
 //   --reference <name>  Combination name to compare every engine with (default comunica-memory)
 //
@@ -49,7 +50,7 @@ const ALL_QUERIES = '*';
 const TEMPLATE_FILE = path.join(__dirname, 'report-template.html');
 
 function parseArgs(argv) {
-  const args = { inputs: [], output: undefined, saveData: undefined, title: 'Experiment results', reference: 'comunica-memory' };
+  const args = { inputs: [], output: undefined, saveData: undefined, exportFile: undefined, title: 'Experiment results', reference: 'comunica-memory' };
   for (let i = 0; i < argv.length; i++) {
     const value = () => {
       if (i + 1 >= argv.length) {
@@ -60,6 +61,7 @@ function parseArgs(argv) {
     switch (argv[i]) {
       case '--output': case '-o': args.output = value(); break;
       case '--save-data': args.saveData = value(); break;
+      case '--export': args.exportFile = value(); break;
       case '--title': args.title = value(); break;
       case '--reference': args.reference = value(); break;
       case '--help': case '-h':
@@ -74,9 +76,9 @@ function parseArgs(argv) {
     }
   }
   if (args.inputs.length === 0) {
-    throw new Error('Usage: node scripts/report.js [--output report.html] [--save-data data.json] [--title text] [--reference comunica-memory] <experiment dir | data file>...');
+    throw new Error('Usage: node scripts/report.js [--output report.html] [--save-data data.json] [--export results.json] [--title text] [--reference comunica-memory] <experiment dir | data file>...');
   }
-  if (!args.output && !args.saveData) {
+  if (!args.output && !args.saveData && !args.exportFile) {
     args.output = 'report.html';
   }
   return args;
@@ -205,6 +207,27 @@ function checkResults(engines) {
   }
 }
 
+// The number of lines in the generated dataset, which approximates its number of triples, or null without a dataset.
+function countTriples(experimentDir) {
+  const file = path.join(experimentDir, 'generated', 'dataset.nt');
+  if (!fs.existsSync(file)) {
+    return null;
+  }
+  const fd = fs.openSync(file, 'r');
+  const buffer = Buffer.alloc(1 << 20);
+  let lines = 0;
+  let read;
+  while ((read = fs.readSync(fd, buffer, 0, buffer.length, null)) > 0) {
+    for (let i = 0; i < read; i++) {
+      if (buffer[i] === 10) {
+        lines++;
+      }
+    }
+  }
+  fs.closeSync(fd);
+  return lines;
+}
+
 function comunicaImage(combinationDir) {
   const dockerfiles = path.join(combinationDir, 'input', 'dockerfiles');
   const file = path.join(dockerfiles, 'Dockerfile-comunica-memory');
@@ -246,6 +269,7 @@ function collectExperiment(dir, label) {
     label: label ?? null,
     source: path.resolve(dir),
     collectedAt: new Date().toISOString(),
+    triples: countTriples(dir),
     comunicaImage: comunicaImage(path.join(dir, 'combinations', 'combination_0')) ?? null,
     params: Object.fromEntries(Object.entries(config)
       .filter(([ key, value ]) => !key.startsWith('@') && typeof value !== 'object' && !/url/iu.test(key))),
@@ -292,6 +316,44 @@ function toHtml(data) {
     .replace('%DATA%', () => json);
 }
 
+// Times keep 4 significant digits, which is well below their variation between runs.
+function round(value) {
+  return value === null || value === undefined ? null : Number(value.toPrecision(4));
+}
+
+// The results to publish: no local paths, and only what is needed to compare engines.
+function toExport(runs, reference) {
+  return {
+    version: 1,
+    generatedAt: new Date().toISOString(),
+    reference,
+    runs: runs.map(run => ({
+      experiment: run.experiment,
+      scale: run.scale,
+      scaleLabel: run.scaleLabel,
+      ...run.label ? { label: run.label } : {},
+      triples: run.triples ?? null,
+      comunicaImage: run.comunicaImage,
+      params: run.params,
+      engines: run.engines.map(engine => ({
+        name: engine.name,
+        label: engine.label,
+        family: engine.family,
+        ingestion: round(engine.ingestion),
+        storeSize: engine.storeSize,
+        templates: engine.templates && Object.fromEntries(Object.entries(engine.templates).map(([ name, template ]) => [ name, {
+          mean: round(template.mean),
+          min: round(template.min),
+          max: round(template.max),
+          queries: template.queries,
+          failed: template.failed,
+          invalid: template.invalid ?? 0,
+        } ])),
+      })),
+    })),
+  };
+}
+
 function main() {
   const args = parseArgs(process.argv.slice(2));
   const runs = collect(args.inputs);
@@ -302,6 +364,10 @@ function main() {
   if (args.saveData) {
     fs.writeFileSync(args.saveData, `${JSON.stringify({ runs }, null, 1)}\n`);
     console.log(`Wrote the results of ${runs.length} runs to ${args.saveData}`);
+  }
+  if (args.exportFile) {
+    fs.writeFileSync(args.exportFile, `${JSON.stringify(toExport(runs, args.reference))}\n`);
+    console.log(`Exported the results of ${runs.length} runs to ${args.exportFile}`);
   }
   if (args.output) {
     fs.writeFileSync(args.output, toHtml(data));
@@ -318,4 +384,4 @@ if (require.main === module) {
   }
 }
 
-module.exports = { collect, toHtml };
+module.exports = { collect, toHtml, toExport };

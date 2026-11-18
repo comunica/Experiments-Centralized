@@ -67,6 +67,15 @@ $ node scripts/report.js --save-data results/data-large.json experiments
 $ node scripts/report.js --output results/report.html results/data-small.json results/data-large.json
 ```
 
+To publish the results, export them as compact JSON without local paths:
+
+```bash
+$ node scripts/report.js --export results/results.json results/data-small.json results/data-large.json
+```
+
+The [Centralized performance](https://comunica.dev/performance/#centralized-performance) section of comunica.dev shows such a file, which is `public/performance-centralized/results.json` in the [website repository](https://github.com/comunica/website).
+The export includes the number of triples of each run when its experiment directory still contains `generated/dataset.nt`.
+
 ## Query timeouts
 
 All engines stop evaluating a query after 300 seconds, so that a timed-out query does not keep using the CPU while the next queries are measured.
