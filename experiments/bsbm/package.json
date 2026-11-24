@@ -12,8 +12,8 @@
     "jbr": "cross-env NODE_OPTIONS=--max-old-space-size=8192 jbr",
     "validate": "jbr validate",
     "plot": "psbr csv bsbm combinations/combination_*/output && npm run plot-small && npm run plot-large && npm run plot-load",
-    "plot-small": "psbr tex query combinations/combination_*/output -n 'plot_small' -q '^[^5]' --svg --overrideCombinationLabels Comunica-Memory,Comunica-HDT,Oxigraph-Rust,Jena,Blazegraph,Virtuoso,GraphDB",
-    "plot-large": "psbr tex query combinations/combination_*/output -n 'plot_large' -q '^5' --svg --overrideCombinationLabels Comunica-Memory,Comunica-HDT,Oxigraph-Rust,Jena,Blazegraph,Virtuoso,GraphDB",
+    "plot-small": "psbr tex query combinations/combination_*/output -n 'plot_small' -q '^[^56]' --svg --logY -c Paired --legendPos 1.32,1.0 --overrideCombinationLabels Comunica-Memory,Comunica-HDT,Oxigraph-Rust,Jena,Blazegraph,Virtuoso,GraphDB,Oxigraph-Rust-Memory,Jena-Memory",
+    "plot-large": "psbr tex query combinations/combination_*/output -n 'plot_large' -q '^5' --svg --logY -c Paired --legendPos 4.25,1.0 --overrideCombinationLabels Comunica-Memory,Comunica-HDT,Oxigraph-Rust,Jena,Blazegraph,Virtuoso,GraphDB,Oxigraph-Rust-Memory,Jena-Memory",
     "plot-load": "node ../../scripts/load-times.js ."
   }
 }

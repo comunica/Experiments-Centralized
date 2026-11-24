@@ -1,0 +1,10 @@
+combination;load_time_ms;ingestion_time_ms;store_size_mib;store_size_kind
+comunica-memory;58847;24354;577.7;memory
+comunica-hdt;300383;110006;192.1;disk
+oxigraph;60618;58543;652.6;disk
+jena;90887;85673;704.2;disk
+blazegraph;237170;211641;683.2;disk
+virtuoso;160820;133916;254.7;disk
+graphdb;171488;95213;489.6;disk
+oxigraph-memory;18500;17607;1306.6;memory
+jena-memory;63750;56867;1389.7;memory

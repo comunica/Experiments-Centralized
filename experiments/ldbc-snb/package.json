@@ -12,8 +12,8 @@
     "jbr": "cross-env NODE_OPTIONS=--max-old-space-size=8192 jbr",
     "validate": "jbr validate",
     "plot": "npm run plot-short && npm run plot-complex && npm run plot-load",
-    "plot-short": "psbr tex query combinations/combination_*/output -n 'plot_short' -q '^interactive-short' --svg --overrideCombinationLabels Comunica-Memory,Oxigraph-Rust,Jena,Blazegraph,Virtuoso,GraphDB,QLever,Oxigraph-Rust-Memory,Jena-Memory",
-    "plot-complex": "psbr tex query combinations/combination_*/output -n 'plot_complex' -q '^interactive-complex' --svg --overrideCombinationLabels Comunica-Memory,Oxigraph-Rust,Jena,Blazegraph,Virtuoso,GraphDB,QLever,Oxigraph-Rust-Memory,Jena-Memory",
+    "plot-short": "psbr tex query combinations/combination_*/output -n 'plot_short' -q '^interactive-short' --svg --logY -c Paired --legendPos 1.46,1.0 --overrideCombinationLabels Comunica-Memory,Oxigraph-Rust,Jena,Blazegraph,Virtuoso,GraphDB,QLever,Oxigraph-Rust-Memory,Jena-Memory --overrideQueryLabels IS1,IS2,IS3,IS4,IS5,IS6,IS7",
+    "plot-complex": "psbr tex query combinations/combination_*/output -n 'plot_complex' -q '^interactive-complex' --svg --logY -c Paired --legendPos 1.23,1.0 --overrideCombinationLabels Comunica-Memory,Oxigraph-Rust,Jena,Blazegraph,Virtuoso,GraphDB,QLever,Oxigraph-Rust-Memory,Jena-Memory --overrideQueryLabels IC1,IC10,IC11,IC12,IC13,IC14,IC2,IC3,IC4,IC5,IC6,IC7,IC8,IC9",
     "plot-load": "node ../../scripts/load-times.js ."
   }
 }

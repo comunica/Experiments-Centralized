@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="330" font-family="sans-serif" font-size="12">
+<text x="154" y="24" text-anchor="end">comunica-memory</text>
+<rect x="160" y="10" width="123.9" height="20" fill="#2a6f97"/>
+<text x="287.9" y="24">105 MiB (memory)</text>
+<text x="154" y="52" text-anchor="end">comunica-hdt</text>
+<rect x="160" y="38" width="12.0" height="20" fill="#2a6f97"/>
+<text x="176.0" y="52">10 MiB (disk)</text>
+<text x="154" y="80" text-anchor="end">oxigraph</text>
+<rect x="160" y="66" width="191.3" height="20" fill="#2a6f97"/>
+<text x="355.3" y="80">162 MiB (disk)</text>
+<text x="154" y="108" text-anchor="end">jena</text>
+<rect x="160" y="94" width="145.4" height="20" fill="#2a6f97"/>
+<text x="309.4" y="108">123 MiB (disk)</text>
+<text x="154" y="136" text-anchor="end">blazegraph</text>
+<rect x="160" y="122" width="127.7" height="20" fill="#2a6f97"/>
+<text x="291.7" y="136">108 MiB (disk)</text>
+<text x="154" y="164" text-anchor="end">virtuoso</text>
+<rect x="160" y="150" width="41.3" height="20" fill="#2a6f97"/>
+<text x="205.3" y="164">35 MiB (disk)</text>
+<text x="154" y="192" text-anchor="end">graphdb</text>
+<rect x="160" y="178" width="154.7" height="20" fill="#2a6f97"/>
+<text x="318.7" y="192">131 MiB (disk)</text>
+<text x="154" y="220" text-anchor="end">qlever</text>
+<rect x="160" y="206" width="44.6" height="20" fill="#2a6f97"/>
+<text x="208.6" y="220">38 MiB (disk)</text>
+<text x="154" y="248" text-anchor="end">oxigraph-memory</text>
+<rect x="160" y="234" width="371.9" height="20" fill="#2a6f97"/>
+<text x="535.9" y="248">316 MiB (memory)</text>
+<text x="154" y="276" text-anchor="end">jena-memory</text>
+<rect x="160" y="262" width="480.0" height="20" fill="#2a6f97"/>
+<text x="644.0" y="276">408 MiB (memory)</text>
+<line x1="160" y1="294" x2="640" y2="294" stroke="#555"/>
+<text x="160" y="310">0</text>
+<text x="640" y="310" text-anchor="end">408 MiB</text>
+<text x="400" y="326" text-anchor="middle">Store size (in memory or on disk)</text>
+</svg>

@@ -3,7 +3,7 @@
 This repo contains several experiments to compare the performance of Comunica when run in a centralized setting.
 
 Please refer to the README within each `experiments/*` directory on how to run these experiments.
-The latest results of these experiments can be found in `results/`.
+The results of each round of experiments are in `results/`, in a directory per month in which they ran, of which [`results/2026-11/`](results/2026-11/) is the latest.
 These results are discussed on https://comunica.dev/performance/.
 
 ## In-memory stores
