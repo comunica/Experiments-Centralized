@@ -32,7 +32,6 @@ This directory also has:
 - `report.html`: an interactive report of all runs, which also checks whether engines return the same result counts.
 - `results.json`: the results as shown on comunica.dev.
 
-The plots were made with `npm run plot` in each experiment.
-The report and `results.json` were made with the `scripts/report.js` of [comunica/Experiments-Centralized#11](https://github.com/comunica/Experiments-Centralized/pull/11), which is not part of this repository.
+The plots were made with `npm run plot` in each experiment, and the report and `results.json` with `scripts/report.js`.
 
 QLever caches query results by default, so its repeated executions of a query can be faster than its first.
