@@ -45,6 +45,11 @@ The store size is what the loaded dataset takes where the engine keeps it, so it
 
 Memory and disk sizes are not directly comparable: on disk, engines can use compression and formats that are slower to read.
 
+For `comunica-hdt`, `comunica-ingestion-timer.js` only times opening the HDT file and its index, as both are created in `jbr prepare`.
+The ingestion time that `scripts/load-times.js` reports therefore adds the time to create them, from when their logs were written:
+`<experiment>-hdt.txt`, which stays empty, is created when the conversion starts, and `<experiment>-hdt-index.txt` is last written when the index is done.
+Without these logs, or when they were copied without their modification times, the ingestion time of `comunica-hdt` is unknown.
+
 ## Query timeouts
 
 All engines stop evaluating a query after 300 seconds, so that a timed-out query does not keep using the CPU while the next queries are measured.
